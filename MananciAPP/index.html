@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missão Evangélica Manancial da Esperança - Plataforma de Crescimento Espiritual</title>
+    <meta name="description" content="Cursos em vídeo, cultos ao vivo, devocionais e comunidade da Missão Evangélica Manancial da Esperança. Crie sua conta grátis e cresça na fé.">
+    <!-- og:image precisa de endereço absoluto: o index.php troca a linha abaixo pela imagem com o endereço do site (SITE_URL_PUBLICA). -->
+    <!--OG_IMAGEM-->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:title" content="Missão Manancial — cursos, lives e comunidade">
+    <meta property="og:description" content="Cursos em vídeo, cultos ao vivo, devocionais e comunidade. Crie sua conta grátis e cresça na fé.">
+    <link href="css/vendor/bootstrap-5.3.2.min.css?v=5.3.2" rel="stylesheet">
+    <link rel="stylesheet" href="css/vendor/fontawesome-6.5.1/css/all.min.css?v=6.5.1">
+    <link rel="stylesheet" href="css/inicio.css">
+    <script src="js/theme.js"></script>
+
+    <!-- PWA: manifest, cor do tema e ícones (Android/Chrome/Edge/Samsung Internet + iOS/Safari) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#60a5fa">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Manancial">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/img/icon-512.png">
+
+    <!-- OneSignal: notificações push. Usa o sw.js do próprio PWA (fundido via
+         importScripts, ver sw.js) para evitar registrar um segundo Service
+         Worker no mesmo scope. Página raiz, então scope/path são sempre "/". -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function (OneSignal) {
+            await OneSignal.init({
+                appId: "b9ae1abb-e78f-4100-b453-62495b382aff",
+                serviceWorkerParam: { scope: "/" },
+                serviceWorkerPath: "sw.js",
+            });
+        });
+    </script>
+    <style>
+        :root {
+            --primary: #60a5fa;
+            --secondary: #a78bfa;
+            --accent: #ec4899;
+            --bg-dark: #060816;
+            --bg-light: #111827;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(17, 24, 39, 0.78);
+            --border-color: rgba(255,255,255,0.12);
+            --surface: rgba(17, 24, 39, 0.9);
+            --surface-strong: rgba(255,255,255,0.06);
+            --gutter: clamp(1.25rem, 5vw, 6rem);
+            /* Sem largura máxima: header, hero, CTA e rodapé ocupam a tela
+               toda, igual à faixa de fotos, só com a margem lateral (gutter). */
+            --container: none;
+        }
+
+        :root[data-theme="light"] {
+            --bg-dark: #f8fafc;
+            --bg-light: #eef2ff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --border-color: rgba(15, 23, 42, 0.12);
+            --surface: rgba(255, 255, 255, 0.9);
+            --surface-strong: rgba(15, 23, 42, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* css/inicio.css limita o main a 1200px sem centralizar (sobra
+           espaço à direita em telas largas). Aqui o main ocupa a largura
+           toda e cada seção centraliza o próprio conteúdo. */
+        main {
+            max-width: none;
+            width: 100%;
+            margin: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(96,165,250,0.18), transparent 28%),
+                linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.04) 45%, transparent 100%);
+            transform: translateX(-20%);
+            animation: shimmer 10s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-20%); }
+            100% { transform: translateX(120%); }
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(16px);
+            background: rgba(6, 8, 22, 0.78);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        :root[data-theme="light"] header {
+            background: rgba(255, 255, 255, 0.85);
+            border-bottom-color: rgba(15, 23, 42, 0.1);
+        }
+
+        .header-shell {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0.65rem var(--gutter);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .header img {
+            height: 34px;
+            filter: drop-shadow(0 4px 12px rgba(96,165,250,0.35));
+        }
+
+        .header h2 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: nowrap;
+            /* inicio.css estica o nav (flex: 1) e centraliza os links — aqui
+               eles ficam alinhados à direita, na mesma margem do conteúdo. */
+            flex: 0 1 auto;
+            justify-content: flex-end;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.88rem;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+
+        nav a:hover {
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+
+        .nav-login, .nav-register {
+            padding: 0.5rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid transparent;
+        }
+
+        .nav-login {
+            color: var(--primary);
+            border-color: rgba(96,165,250,0.35);
+        }
+
+        .nav-register {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-on-primary, #ffffff);
+            box-shadow: 0 10px 24px rgba(96,165,250,0.24);
+        }
+
+        .nav-live {
+            color: #fb7185 !important;
+        }
+
+        .nav-download {
+            color: #4ade80 !important;
+        }
+
+        .nav-download:hover {
+            color: #22c55e !important;
+        }
+
+        .live-dot {
+            position: relative;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #fb7185;
+            flex-shrink: 0;
+        }
+
+        .live-dot::before {
+            /* content: none (em vez de '') não gera o pseudo-elemento
+               nenhum — o ponto fica com cor fixa, sem anel pulsando, até
+               js/live-indicator.js confirmar que tem transmissão AO_VIVO
+               agora e adicionar a classe abaixo. */
+            content: none;
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            background: rgba(251,113,133,0.35);
+            animation: live-pulse 1.6s ease-out infinite;
+        }
+
+        .live-dot.is-ao-vivo::before {
+            content: '';
+        }
+
+        @keyframes live-pulse {
+            0% { transform: scale(0.6); opacity: 0.9; }
+            100% { transform: scale(2.4); opacity: 0; }
+        }
+
+        #home.hero {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 4.5rem var(--gutter) 3rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            align-items: stretch;
+            justify-content: normal;
+            min-height: 0;
+            gap: 2.5rem;
+        }
+
+        .hero-copy {
+            min-width: 0;
+        }
+
+        .hero-copy .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            background: rgba(96,165,250,0.14);
+            border: 1px solid rgba(96,165,250,0.24);
+            margin-bottom: 1.2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 4.5vw, 4.3rem);
+            line-height: 1.08;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            /* Sem limite o título vira uma linha só nas telas largas e o
+               degradê se espalha demais. */
+            max-width: 1100px;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent) 46%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.08rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin-bottom: 1.6rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+        }
+
+        .btn-primary, .btn-secondary {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.95rem 1.35rem;
+            border-radius: 999px;
+            font-weight: 700;
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary {
+            color: var(--text-on-primary, #ffffff);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 14px 26px rgba(96,165,250,0.24);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 30px rgba(96,165,250,0.32);
+            color: var(--text-on-primary, #ffffff);
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            background: var(--surface);
+        }
+
+        .btn-secondary:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.06);
+            text-decoration: none;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.9rem;
+            max-width: 620px;
+        }
+
+        .stat-card {
+            padding: 1rem;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 1.2rem;
+            color: var(--text-main);
+        }
+
+        .stat-card span {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        :root[data-theme="light"] .cta-box {
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+        }
+
+        .marquee-section {
+            width: 100%;
+            margin: 0;
+            padding: 1rem 0 3rem;
+        }
+
+        .hero-frase {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 0.5rem 0 0.25rem;
+        }
+
+        .como-funciona,
+        .visita {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 2.5rem var(--gutter, 1.25rem) 0;
+        }
+
+        .como-funciona h2,
+        .visita h2 {
+            text-align: center;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .como-funciona-passos {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .como-funciona-passos li,
+        .visita-bloco {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .como-funciona-passos strong {
+            font-size: 1.1rem;
+        }
+
+        .como-funciona-passos span:last-child,
+        .visita-bloco p,
+        .visita-horarios {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .como-funciona-icone {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            background: rgba(96, 165, 250, 0.15);
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .visita-grade {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .visita-bloco h3 {
+            font-size: 1.1rem;
+            margin: 0 0 0.25rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .visita-bloco h3 i {
+            color: var(--primary);
+        }
+
+        .visita-horarios {
+            padding-left: 1.1rem;
+        }
+
+        .visita-mapa,
+        .visita-rede {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-height: 44px;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .visita-redes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .como-funciona-passos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .marquee-title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin: 0 0 0.5rem;
+        }
+
+        .marquee-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .marquee {
+            overflow: hidden;
+            width: 100%;
+            -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+        }
+
+        .marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            width: max-content;
+            animation: marquee-scroll 32s linear infinite;
+        }
+
+        .marquee:hover .marquee-track {
+            animation-play-state: paused;
+        }
+
+        .marquee-img {
+            /* Cresce com a tela para a faixa sempre cobrir a largura toda,
+               mesmo em monitores largos ou com zoom reduzido. */
+            height: clamp(180px, 14vw, 320px);
+            width: auto;
+            flex-shrink: 0;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 14px 30px rgba(2, 6, 23, 0.18);
+        }
+
+        /* <picture> (WebP com o JPEG de reserva) não vira um item a mais da
+           faixa: a imagem continua sendo o item, como antes. */
+        .marquee-track picture {
+            display: contents;
+        }
+
+        @keyframes marquee-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        @media (max-width: 768px) {
+            .marquee-img {
+                height: 150px;
+            }
+        }
+
+        .cta-section {
+            max-width: var(--container);
+            margin: 0 auto 2rem;
+            padding: 2rem var(--gutter);
+        }
+
+        .cta-box {
+            border-radius: 28px;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(96,165,250,0.18), rgba(167,139,250,0.18));
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        :root[data-theme="light"] .cta-box {
+            background: linear-gradient(135deg, rgba(96,165,250,0.12), rgba(167,139,250,0.12));
+        }
+
+        .cta-box h3 {
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+            font-size: 1.4rem;
+        }
+
+        .cta-box p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 2.2rem var(--gutter) 1.5rem;
+            margin-top: 2rem;
+            background: var(--footer-bg);
+            backdrop-filter: blur(6px);
+        }
+
+        .footer-content {
+            max-width: var(--container);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .footer-section h4 {
+            color: var(--text-main);
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.45rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-main);
+        }
+
+        .footer-bottom {
+            max-width: var(--container);
+            margin: 1.2rem auto 0;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .theme-toggle-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.25rem 0.45rem;
+            border-radius: 999px;
+            background: var(--surface-strong);
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-toggle {
+            appearance: none;
+            -webkit-appearance: none;
+            position: relative;
+            width: 54px;
+            height: 30px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--surface-strong);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+            padding: 0;
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--knob, #ffffff);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            transition: transform 0.25s ease;
+        }
+
+        .theme-toggle:checked {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+        }
+
+        .theme-toggle:checked::before {
+            transform: translateX(24px);
+        }
+
+        .theme-toggle:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .theme-icon {
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 960px) {
+            #home.hero {
+                padding-top: 2.5rem;
+            }
+
+            .hero h1 {
+                font-size: clamp(1.9rem, 8vw, 2.6rem);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .header-shell {
+                flex-direction: column;
+                padding: 0.75rem 1rem;
+            }
+
+            nav {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cta-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-shell">
+            <div class="header">
+                <img src="assets/logo-sm.png" alt="Logo Missão Manancial">
+                <h2>Missão Manancial</h2>
+            </div>
+            <nav>
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="cursos.php"><i class="fas fa-book"></i> Cursos</a>
+                <a href="sobre.php"><i class="fas fa-heart"></i> Sobre</a>
+                <a href="ao-vivo.php" class="nav-live"><span class="live-dot"></span> Ao Vivo</a>
+                <a href="como-instalar.php" class="nav-download"><i class="fas fa-download"></i> Baixar App</a>
+                <a href="login.php" class="nav-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="php/fiel/register.php" class="nav-register"><i class="fas fa-user-plus"></i> Criar Conta</a>
+                <div class="theme-toggle-container">
+                    <i class="fas fa-moon theme-icon"></i>
+                    <input type="checkbox" id="theme-toggle" class="theme-toggle" aria-label="Alternar tema">
+                    <i class="fas fa-sun theme-icon"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-copy">
+                <div class="pill"><i class="fas fa-church" aria-hidden="true"></i> <span data-igreja-texto="nome">Missão Manancial</span></div>
+                <h1>Uma experiência de fé, aprendizado e conexão em uma só plataforma.</h1>
+                <!-- Frase da Identidade da igreja (js/igreja-publica.js); vazia, não aparece. -->
+                <p class="hero-frase" data-igreja-texto="frase" hidden></p>
+                <p>Explore vídeos, estudos, encontros e conteúdos inspiradores em um ambiente moderno, acolhedor e pensado para fortalecer sua caminhada espiritual.</p>
+                <div class="hero-actions">
+                    <a href="php/fiel/register.php" class="btn-primary"><i class="fas fa-paper-plane"></i> Comece agora</a>
+                    <a href="cursos.php" class="btn-secondary"><i class="fas fa-film"></i> Ver conteúdos</a>
+                </div>
+                <!-- Números reais (js/numeros-publicos.js); sem resposta, ficam estes textos sem número. -->
+                <div class="hero-stats" data-numeros-publicos data-url="ajax_numeros_publicos.php">
+                    <div class="stat-card">
+                        <strong>Cursos</strong>
+                        <span>em vídeo, no seu ritmo</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>Ao vivo</strong>
+                        <span>cultos e estudos</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>Comunidade</strong>
+                        <span>testemunhos e orações</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quem chega pelo link do WhatsApp entende o caminho antes de se
+             cadastrar (antes descobria a aprovação só depois, no login). -->
+        <section class="como-funciona" aria-labelledby="comoFuncionaTitulo">
+            <h2 id="comoFuncionaTitulo">Como funciona</h2>
+            <ol class="como-funciona-passos">
+                <li>
+                    <span class="como-funciona-icone" aria-hidden="true"><i class="fas fa-user-plus"></i></span>
+                    <strong>1. Crie sua conta</strong>
+                    <span>Leva um minuto: nome, e-mail, WhatsApp e uma senha.</span>
+                </li>
+                <li>
+                    <span class="como-funciona-icone" aria-hidden="true"><i class="fas fa-user-check"></i></span>
+                    <strong>2. Um líder libera o acesso</strong>
+                    <span>Para proteger a comunidade, cada cadastro é conferido. Você recebe um e-mail.</span>
+                </li>
+                <li>
+                    <span class="como-funciona-icone" aria-hidden="true"><i class="fas fa-play"></i></span>
+                    <strong>3. Assista e participe</strong>
+                    <span>Cursos, cultos ao vivo, devocionais e a comunidade, no celular ou no computador.</span>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Horários, endereço e redes (Admin → Identidade da igreja, via
+             js/igreja-publica.js). Sem nada preenchido, fica escondida. -->
+        <section class="visita" data-igreja-visita hidden aria-labelledby="visitaTitulo">
+            <h2 id="visitaTitulo">Venha nos visitar</h2>
+            <div class="visita-grade">
+                <div class="visita-bloco" data-igreja-bloco hidden>
+                    <h3><i class="fas fa-clock" aria-hidden="true"></i> Cultos</h3>
+                    <ul class="visita-horarios" data-igreja-horarios></ul>
+                </div>
+                <div class="visita-bloco" data-igreja-bloco hidden>
+                    <h3><i class="fas fa-location-dot" aria-hidden="true"></i> Onde estamos</h3>
+                    <p data-igreja-endereco></p>
+                    <a class="visita-mapa" data-igreja-mapa href="#" target="_blank" rel="noopener" hidden><i class="fas fa-map" aria-hidden="true"></i> Ver no mapa</a>
+                </div>
+                <div class="visita-bloco" data-igreja-bloco hidden>
+                    <h3><i class="fas fa-heart" aria-hidden="true"></i> Fale com a gente</h3>
+                    <div class="visita-redes" data-igreja-redes></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="marquee-section">
+            <h2 class="marquee-title">Nossa comunidade</h2>
+            <p class="marquee-subtitle">Cultos, louvor, ensino e celebrações que fazem parte da nossa caminhada.</p>
+            <div class="marquee">
+                <div class="marquee-track">
+                    <picture><source srcset="assets/curso1.webp" type="image/webp"><img src="assets/curso1.png" alt="Banda de louvor durante um culto" class="marquee-img" width="853" height="568" loading="lazy" decoding="async"></picture>
+                    <picture><source srcset="assets/curso2.webp" type="image/webp"><img src="assets/curso2.png" alt="Pastor pregando no púlpito" class="marquee-img" width="853" height="568" loading="lazy" decoding="async"></picture>
+                    <picture><source srcset="assets/curso3.webp" type="image/webp"><img src="assets/curso3.jpg" alt="Ministrante falando ao microfone" class="marquee-img" width="925" height="640" loading="lazy" decoding="async"></picture>
+                    <picture><source srcset="assets/curso4.webp" type="image/webp"><img src="assets/curso4.png" alt="Grupo de dança e louvor em celebração" class="marquee-img" width="566" height="376" loading="lazy" decoding="async"></picture>
+                    <picture><source srcset="assets/curso1.webp" type="image/webp"><img src="assets/curso1.png" alt="" aria-hidden="true" class="marquee-img" width="853" height="568" loading="lazy" decoding="async"></picture>
+                    <picture><source srcset="assets/curso2.webp" type="image/webp"><img src="assets/curso2.png" alt="" aria-hidden="true" class="marquee-img" width="853" height="568" loading="lazy" decoding="async"></picture>
+                    <picture><source srcset="assets/curso3.webp" type="image/webp"><img src="assets/curso3.jpg" alt="" aria-hidden="true" class="marquee-img" width="925" height="640" loading="lazy" decoding="async"></picture>
+                    <picture><source srcset="assets/curso4.webp" type="image/webp"><img src="assets/curso4.png" alt="" aria-hidden="true" class="marquee-img" width="566" height="376" loading="lazy" decoding="async"></picture>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-box">
+                <div>
+                    <h3>Pronto para entrar nessa experiência?</h3>
+                    <p>Crie sua conta ou acesse agora e faça parte dessa comunidade.</p>
+                </div>
+                <div class="hero-actions">
+                    <a href="php/fiel/register.php" class="btn-primary"><i class="fas fa-user-plus"></i> Criar conta</a>
+                    <a href="login.php" class="btn-secondary"><i class="fas fa-sign-in-alt"></i> Fazer login</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-church me-2"></i>Missão Manancial</h4>
+                <p>Uma plataforma dedicada ao crescimento espiritual, à comunidade e à transmissão de conteúdos de valor.</p>
+            </div>
+            <div class="footer-section">
+                <h4><i class="fas fa-link me-2"></i>Links rápidos</h4>
+                <a href="#home">Home</a>
+                <a href="cursos.php">Conteúdos</a>
+                <a href="sobre.php">Sobre</a>
+                <a href="login.php">Login</a>
+                <a href="php/fiel/register.php">Criar conta</a>
+            </div>
+            <div class="footer-section">
+                <h4><i class="fas fa-hands-praying me-2"></i>Contato</h4>
+                <!-- Página estática: o contato real (variáveis CONTATO_* do Render) aparece em sobre.php. -->
+                <p><a href="sobre.php"><i class="fas fa-envelope me-2"></i>Fale com a gente</a></p>
+                <p><a href="privacidade.php"><i class="fas fa-user-shield me-2"></i>Política de Privacidade</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024-2026 <span data-igreja-texto="nome_completo">Missão Evangélica Manancial da Esperança</span>. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/vendor/bootstrap-5.3.2.bundle.min.js?v=5.3.2"></script>
+<script src="js/pwa.js" defer></script>
+<script src="js/live-indicator.js" data-status-url="ajax_transmissao_status.php"></script>
+<script src="js/numeros-publicos.js" defer></script>
+<script src="js/igreja-publica.js" defer></script>
+<script src="js/menu-publico.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# Arquivos daqui só são carregados por outras páginas via require/include
+# (o PHP lê direto do disco, então isso não afeta eles). Abertos direto pela
+# URL, ou renderizavam pedaço de HTML solto ou davam erro 500.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

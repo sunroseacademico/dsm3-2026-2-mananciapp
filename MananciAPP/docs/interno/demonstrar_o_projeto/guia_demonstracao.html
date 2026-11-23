@@ -1,0 +1,1524 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guia da Demonstração</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f2ee;
+    --bg-2: #ebe7df;
+    --card: #ffffff;
+    --text: #1b1d24;
+    --muted: #626774;
+    --line: #e4e0d8;
+    --hero-1: #1a1f4b;
+    --hero-2: #3b2a73;
+    --hero-3: #0f6b6b;
+    --gold: #e0a93b;
+    --gold-soft: #fbf1dc;
+    --accent: #3b4fd9;
+    --accent-soft: #eaedfd;
+    --ok: #18794e;
+    --ok-soft: #e3f4ea;
+    --warn: #9a5a00;
+    --warn-soft: #fdf1dc;
+    --stop: #b3261e;
+    --stop-soft: #fceae8;
+    --say: #6d3fb0;
+    --say-soft: #f1eafb;
+    --gray-soft: #eeece8;
+    --shadow: 0 1px 2px rgba(20, 20, 40, .04), 0 8px 24px rgba(20, 20, 40, .06);
+    --shadow-lg: 0 2px 4px rgba(20, 20, 40, .05), 0 18px 40px rgba(20, 20, 40, .10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101116; --bg-2: #171821; --card: #1b1d26; --text: #ecedf2; --muted: #a4a8b5; --line: #2c2f3b;
+      --gold: #f0bd55; --gold-soft: #3a2e14; --accent: #8c9bff; --accent-soft: #232a4d;
+      --ok: #62d19a; --ok-soft: #15301f; --warn: #f2b45c; --warn-soft: #36280f;
+      --stop: #ff8f86; --stop-soft: #3b1b19; --say: #c7a5f7; --say-soft: #2a2140; --gray-soft: #242631;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+      --shadow-lg: 0 2px 4px rgba(0,0,0,.35), 0 18px 40px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101116; --bg-2: #171821; --card: #1b1d26; --text: #ecedf2; --muted: #a4a8b5; --line: #2c2f3b;
+    --gold: #f0bd55; --gold-soft: #3a2e14; --accent: #8c9bff; --accent-soft: #232a4d;
+    --ok: #62d19a; --ok-soft: #15301f; --warn: #f2b45c; --warn-soft: #36280f;
+    --stop: #ff8f86; --stop-soft: #3b1b19; --say: #c7a5f7; --say-soft: #2a2140; --gray-soft: #242631;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    --shadow-lg: 0 2px 4px rgba(0,0,0,.35), 0 18px 40px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 130px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  code { background: var(--gray-soft); padding: 2px 7px; border-radius: 6px; font-size: .88em; word-break: break-all; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; overflow: hidden; color: #fff;
+    background:
+      radial-gradient(900px 400px at 85% -10%, rgba(224,169,59,.35), transparent 60%),
+      radial-gradient(700px 380px at 0% 110%, rgba(15,107,107,.55), transparent 60%),
+      linear-gradient(135deg, var(--hero-1), var(--hero-2));
+    padding: 40px 16px 84px;
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 22px 22px; mask-image: linear-gradient(to bottom, #000, transparent 85%);
+  }
+  .hero-in { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--gold);
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+    padding: 5px 12px; border-radius: 99px;
+  }
+  .hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.8rem); line-height: 1.15; margin: 16px 0 10px; font-weight: 800; letter-spacing: -.02em; }
+  .hero p { margin: 0; max-width: 640px; color: rgba(255,255,255,.82); font-size: 1.05rem; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px; font-size: .88rem;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16);
+    padding: 7px 14px; border-radius: 12px; color: #fff;
+  }
+  .chip b { color: var(--gold); font-weight: 700; }
+  .chip code { background: rgba(0,0,0,.25); color: #fff; }
+
+  /* ---------- Tabs ---------- */
+  .tabs-wrap { position: sticky; top: 0; z-index: 20; margin-top: -54px; padding: 0 16px; }
+  .tabs {
+    max-width: 980px; margin: 0 auto; display: flex; gap: 6px; padding: 6px;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-lg);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 1; min-width: max-content; display: flex; align-items: center; justify-content: center; gap: 8px;
+    font: inherit; font-weight: 700; font-size: .95rem; color: var(--muted);
+    background: transparent; border: 0; border-radius: 11px; padding: 12px 18px; cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .tab:hover { color: var(--text); background: var(--gray-soft); }
+  .tab[aria-selected="true"] {
+    color: #fff; background: linear-gradient(135deg, var(--hero-1), var(--hero-2));
+    box-shadow: 0 6px 16px rgba(59,42,115,.35);
+  }
+  .tab .ico { font-size: 1.1rem; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 22px 16px 90px; }
+  .panel { display: none; animation: fade .25s ease; }
+  .panel.on { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Toolbar (roteiro) ---------- */
+  .toolbar {
+    position: sticky; top: 76px; z-index: 10; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); padding: 12px 0; margin-bottom: 6px;
+  }
+  .progress-box { flex: 1; min-width: 220px; display: flex; align-items: center; gap: 12px; }
+  .progress { flex: 1; height: 10px; background: var(--bg-2); border-radius: 99px; overflow: hidden; }
+  .progress > div {
+    height: 100%; width: 0; border-radius: 99px;
+    background: linear-gradient(90deg, var(--hero-3), var(--ok), var(--gold)); transition: width .35s ease;
+  }
+  .progress-txt { font-size: .85rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+  .btn {
+    font: inherit; font-size: .85rem; font-weight: 600; border: 1px solid var(--line); background: var(--card);
+    color: var(--text); padding: 8px 14px; border-radius: 10px; cursor: pointer; transition: border-color .2s, transform .1s;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn:active { transform: scale(.97); }
+
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 8px; }
+  .toc a {
+    display: inline-flex; align-items: center; gap: 6px; font-size: .84rem; font-weight: 600; text-decoration: none;
+    color: var(--text); background: var(--card); border: 1px solid var(--line); padding: 6px 12px; border-radius: 99px;
+    transition: border-color .2s, background .2s;
+  }
+  .toc a:hover { border-color: var(--accent); }
+  .toc a .cnt { font-size: .72rem; color: var(--muted); font-weight: 700; }
+  .toc a.complete { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
+  .toc a.complete .cnt { color: var(--ok); }
+
+  /* ---------- Section cards ---------- */
+  .card {
+    position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+    padding: 6px 22px 18px; margin: 22px 0; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--c, var(--accent)); }
+  .card-head { display: flex; gap: 14px; align-items: center; padding: 16px 0 4px; flex-wrap: wrap; }
+  .num {
+    width: 44px; height: 44px; flex: none; border-radius: 14px; display: grid; place-items: center;
+    font-size: 1.3rem; background: color-mix(in srgb, var(--c, var(--accent)) 14%, transparent);
+  }
+  .card-head h2 { font-size: 1.28rem; margin: 0; letter-spacing: -.01em; }
+  .card-head .sub { font-size: .8rem; color: var(--muted); font-weight: 600; display: block; letter-spacing: .04em; text-transform: uppercase; }
+  .tags { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: .74rem; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: var(--gray-soft); color: var(--muted); white-space: nowrap; }
+  .tag.star { background: var(--gold-soft); color: var(--warn); }
+  .lead { color: var(--muted); margin: 6px 0 10px; }
+
+  details { border-top: 1px dashed var(--line); }
+  details:first-of-type { border-top: 0; }
+  summary {
+    cursor: pointer; list-style: none; display: flex; gap: 12px; align-items: center;
+    padding: 13px 4px; font-weight: 700; border-radius: 10px; transition: background .15s;
+  }
+  summary:hover { background: var(--gray-soft); }
+  summary::-webkit-details-marker { display: none; }
+  .check { position: relative; width: 24px; height: 24px; flex: none; }
+  .check input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+  .check span {
+    position: absolute; inset: 0; border-radius: 8px; border: 2px solid var(--line); background: var(--card);
+    display: grid; place-items: center; transition: all .2s;
+  }
+  .check span::after { content: "✓"; color: #fff; font-size: 15px; font-weight: 800; transform: scale(0); transition: transform .2s; }
+  .check input:checked + span { background: var(--ok); border-color: var(--ok); }
+  .check input:checked + span::after { transform: scale(1); }
+  .check input:focus-visible + span { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
+  summary .title { flex: 1; }
+  summary .who-mini { font-size: .72rem; font-weight: 700; color: var(--muted); }
+  summary .chev { color: var(--muted); transition: transform .2s; font-size: 1.1rem; }
+  details[open] summary .chev { transform: rotate(90deg); }
+  details.done summary .title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--ok); }
+
+  .body { padding: 2px 4px 16px 40px; }
+  .steps { counter-reset: s; list-style: none; margin: 6px 0; padding: 0; }
+  .steps > li { counter-increment: s; position: relative; padding: 6px 0 6px 38px; }
+  .steps > li::before {
+    content: counter(s); position: absolute; left: 0; top: 6px; width: 26px; height: 26px; border-radius: 50%;
+    display: grid; place-items: center; font-size: .78rem; font-weight: 800;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .steps > li + li { border-top: 1px solid var(--gray-soft); }
+  .body ul { margin: 6px 0; padding-left: 20px; }
+  .body li { margin: 3px 0; }
+  .path { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: .86rem; font-weight: 600; }
+  .path i { font-style: normal; background: var(--gray-soft); padding: 1px 8px; border-radius: 6px; }
+  .path i + i::before { content: "›"; margin: 0 6px 0 -2px; color: var(--muted); }
+  .k { display: inline-block; font-size: .85em; font-weight: 700; padding: 0 7px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); }
+
+  .who { display: inline-block; font-size: .72rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; margin-right: 4px; vertical-align: 1px; letter-spacing: .02em; }
+  .w-a { background: #dff3ff; color: #0b5f8a; }
+  .w-b { background: #e6f6e4; color: #2c6b23; }
+  .w-l { background: #fdf0d6; color: #8a5a00; }
+  .w-adm { background: #f1e6fb; color: #6b3aa6; }
+  .w-cel { background: #ffe5ea; color: #a3233f; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .w-a { background: #12344a; color: #8fd2ff; }
+    :root:not([data-theme="light"]) .w-b { background: #18341a; color: #9fe196; }
+    :root:not([data-theme="light"]) .w-l { background: #3a2c0f; color: #f6c869; }
+    :root:not([data-theme="light"]) .w-adm { background: #2e1f44; color: #d4b0fa; }
+    :root:not([data-theme="light"]) .w-cel { background: #3d1820; color: #ff9fb3; }
+  }
+
+  .note { border-radius: 12px; padding: 11px 14px 11px 44px; margin: 10px 0 2px; font-size: .94rem; position: relative; }
+  .note::before { position: absolute; left: 14px; top: 10px; font-size: 1.1rem; }
+  .note b.lbl { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 1px; }
+  .say { background: var(--say-soft); } .say::before { content: "💬"; } .say b.lbl { color: var(--say); }
+  .tip { background: var(--warn-soft); } .tip::before { content: "⚠️"; } .tip b.lbl { color: var(--warn); }
+  .good { background: var(--ok-soft); } .good::before { content: "✅"; } .good b.lbl { color: var(--ok); }
+
+  table { width: 100%; border-collapse: collapse; font-size: .94rem; margin: 8px 0; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
+  .table-scroll { overflow-x: auto; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+  .box { border-radius: 14px; padding: 14px 18px; }
+  .box h3 { margin: 0 0 6px; font-size: 1rem; }
+  .box ul { margin: 0; padding-left: 20px; }
+  .box.stop { background: var(--stop-soft); } .box.stop h3 { color: var(--stop); }
+  .box.okb { background: var(--ok-soft); } .box.okb h3 { color: var(--ok); }
+
+  /* ---------- PDF tab ---------- */
+  .intro {
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px 22px;
+    box-shadow: var(--shadow); margin: 6px 0 18px;
+  }
+  .intro h2 { margin: 0 0 4px; font-size: 1.35rem; }
+  .intro p { margin: 0; color: var(--muted); }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+  .stat { border-radius: 14px; padding: 14px; background: var(--gray-soft); }
+  .stat .n { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+  .stat .l { font-size: .8rem; font-weight: 600; color: var(--muted); margin-top: 4px; }
+  .stat.s-ok { background: var(--ok-soft); } .stat.s-ok .n { color: var(--ok); }
+  .stat.s-part { background: var(--gold-soft); } .stat.s-part .n { color: var(--warn); }
+  .stat.s-wait { background: var(--accent-soft); } .stat.s-wait .n { color: var(--accent); }
+  .stat.s-no { background: var(--stop-soft); } .stat.s-no .n { color: var(--stop); }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+  .filter {
+    font: inherit; font-size: .84rem; font-weight: 700; padding: 7px 14px; border-radius: 99px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card); color: var(--muted);
+  }
+  .filter[aria-pressed="true"] { background: var(--text); color: var(--card); border-color: var(--text); }
+
+  .pdf-list { display: grid; gap: 12px; }
+  .pdf-item {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px;
+    box-shadow: var(--shadow); display: grid; grid-template-columns: 56px 1fr; gap: 14px;
+  }
+  .pdf-item .pn {
+    width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; font-weight: 800; font-size: 1.05rem;
+    background: var(--gray-soft);
+  }
+  .pdf-item[data-s="ok"] .pn { background: var(--ok-soft); color: var(--ok); }
+  .pdf-item[data-s="part"] .pn { background: var(--gold-soft); color: var(--warn); }
+  .pdf-item[data-s="wait"] .pn { background: var(--accent-soft); color: var(--accent); }
+  .pdf-item[data-s="no"] .pn { background: var(--stop-soft); color: var(--stop); }
+  .pdf-item h3 { margin: 0; font-size: 1.05rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .badge { font-size: .72rem; font-weight: 800; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { background: var(--ok-soft); color: var(--ok); }
+  .b-part { background: var(--gold-soft); color: var(--warn); }
+  .b-wait { background: var(--accent-soft); color: var(--accent); }
+  .b-no { background: var(--stop-soft); color: var(--stop); }
+  .pdf-item .ask { color: var(--muted); font-size: .9rem; margin: 2px 0 6px; font-style: italic; }
+  .pdf-item ul { margin: 4px 0; padding-left: 18px; font-size: .94rem; }
+  .pdf-item .show { font-size: .85rem; font-weight: 700; margin-top: 6px; }
+  .pdf-item .show a { text-decoration: none; }
+  .pdf-item .missing { font-size: .9rem; margin-top: 6px; color: var(--muted); }
+  .pdf-item .missing b { color: var(--text); }
+
+  /* ---------- Projeto geral ---------- */
+  .pitch {
+    border-radius: 22px; padding: 26px 24px; color: #fff; margin: 6px 0 22px; box-shadow: var(--shadow-lg);
+    background: radial-gradient(600px 260px at 100% 0%, rgba(224,169,59,.35), transparent 60%),
+                linear-gradient(135deg, var(--hero-3), var(--hero-1));
+  }
+  .pitch h2 { margin: 0 0 8px; font-size: 1.5rem; letter-spacing: -.01em; }
+  .pitch p { margin: 0; color: rgba(255,255,255,.85); max-width: 680px; }
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+  .pillar { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 14px; padding: 12px; }
+  .pillar b { display: block; font-size: 1.4rem; }
+  .pillar span { font-size: .85rem; font-weight: 600; }
+
+  .area-title { display: flex; align-items: center; gap: 10px; margin: 28px 0 12px; font-size: 1.15rem; }
+  .area-title .ai { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: var(--card); border: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .feat {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .feat:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .feat .fi { font-size: 1.5rem; }
+  .feat h4 { margin: 6px 0 4px; font-size: 1rem; }
+  .feat p { margin: 0; font-size: .9rem; color: var(--muted); }
+  .feat .why { margin-top: 8px; font-size: .82rem; font-weight: 600; color: var(--hero-3); }
+  :root[data-theme="dark"] .feat .why { color: #6fd6d0; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .feat .why { color: #6fd6d0; } }
+  .feat.soon { border-style: dashed; background: transparent; box-shadow: none; }
+  .feat.soon .why { color: var(--muted); }
+
+  .theme-btn {
+    position: absolute; top: 16px; right: 16px; z-index: 2; font: inherit; font-size: .85rem; font-weight: 600;
+    color: #fff; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 10px;
+    padding: 7px 12px; cursor: pointer;
+  }
+
+  @media (max-width: 720px) {
+    .stats, .pillars { grid-template-columns: repeat(2, 1fr); }
+    .two { grid-template-columns: 1fr; }
+    .body { padding-left: 4px; }
+    .card { padding: 4px 16px 14px; }
+    .toolbar { top: 70px; }
+    .tags { margin-left: 0; width: 100%; }
+    .pdf-item { grid-template-columns: 1fr; }
+    .pdf-item .pn { width: 46px; height: 46px; }
+    .tab { padding: 10px 12px; font-size: .88rem; }
+  }
+  @media print {
+    .tabs-wrap, .toolbar, .toc, .filters, .theme-btn { display: none !important; }
+    .panel { display: block !important; break-before: page; }
+    details > *:not(summary) { display: block !important; }
+    .card, .pdf-item, .feat { break-inside: avoid; box-shadow: none; }
+    body { background: #fff; }
+    .hero { padding-bottom: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <button class="theme-btn" id="themeBtn" type="button">🌓 Tema</button>
+  <div class="hero-in">
+    <span class="eyebrow">✦ Uso interno da equipe</span>
+    <h1>Guia da demonstração<br>do MananciAPP</h1>
+    <p>Tudo o que precisa ser mostrado ao cliente, na ordem certa e com o passo a passo de cada tela. Marque cada item conforme for mostrando.</p>
+    <div class="hero-meta">
+      <span class="chip">🌐 <code>mananciapp-render-homolog.onrender.com</code></span>
+      <span class="chip">⏱ <b>60 a 75 min</b> + perguntas</span>
+      <span class="chip">👥 4 contas + 1 e-mail novo</span>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="roteiro" aria-selected="true"><span class="ico">🎬</span> Roteiro da demo</button>
+    <button class="tab" role="tab" data-tab="pdf" aria-selected="false"><span class="ico">📄</span> Pontos do PDF</button>
+    <button class="tab" role="tab" data-tab="projeto" aria-selected="false"><span class="ico">⛪</span> Projeto geral</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- =====================================================================
+     ABA 1 — ROTEIRO
+     ===================================================================== -->
+<section class="panel on" id="p-roteiro" role="tabpanel">
+
+  <div class="toolbar">
+    <div class="progress-box">
+      <div class="progress" aria-label="Progresso da demonstração"><div id="prog"></div></div>
+      <span class="progress-txt" id="progTxt">0 de 0</span>
+    </div>
+    <button class="btn" id="expand" type="button">Abrir tudo</button>
+    <button class="btn" id="reset" type="button">Limpar marcações</button>
+    <button class="btn" type="button" onclick="window.print()">🖨 Imprimir</button>
+  </div>
+
+  <nav class="toc" id="toc">
+    <a href="#prep">🧰 Preparação <span class="cnt"></span></a>
+    <a href="#b1">📲 Baixar o app <span class="cnt"></span></a>
+    <a href="#b2">📝 Cadastro <span class="cnt"></span></a>
+    <a href="#b3">🎞 Assistir <span class="cnt"></span></a>
+    <a href="#b4">💬 Comunidade <span class="cnt"></span></a>
+    <a href="#b5">🌱 Crescer <span class="cnt"></span></a>
+    <a href="#b6">🔴 Ao vivo <span class="cnt"></span></a>
+    <a href="#b7">🛠 Admin <span class="cnt"></span></a>
+    <a href="#b8">💳 Assinaturas <span class="cnt"></span></a>
+    <a href="#fim">🤝 Fechamento <span class="cnt"></span></a>
+    <a href="#cuidado">⚠️ Cuidados</a>
+  </nav>
+
+  <div class="note good" style="margin-top:4px"><b class="lbl">Legenda das contas</b>
+    <span class="who w-a">FIEL A</span> pessoa da demo ·
+    <span class="who w-b">FIEL B</span> quem reage ·
+    <span class="who w-l">LÍDER</span> pastor/líder ·
+    <span class="who w-adm">ADMIN</span> painel da igreja ·
+    <span class="who w-cel">CELULAR</span> fazer no celular
+  </div>
+
+  <!-- PREPARAÇÃO -->
+  <article class="card" id="prep" style="--c:#0f6b6b">
+    <div class="card-head">
+      <div class="num">🧰</div>
+      <div><span class="sub">Passo 0 · no dia anterior</span><h2>Preparação</h2></div>
+      <div class="tags"><span class="tag">1 a 2 horas</span><span class="tag star">★ obrigatório</span></div>
+    </div>
+    <p class="lead">Sem esta preparação várias telas aparecem vazias e a demo perde força. Faça no dia anterior e revise 30 min antes.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-contas"><span></span></label><span class="title">Criar e aprovar as 4 contas</span><span class="chev">›</span></summary>
+      <div class="body">
+        <div class="table-scroll"><table>
+          <tr><th>Conta</th><th>Para quê</th><th>Como deixar pronta</th></tr>
+          <tr><td><span class="who w-a">FIEL A</span></td><td>Assiste, comenta, pede oração, escreve resumo</td><td>Cadastro normal, aprovado. Preencher o perfil inteiro com foto.</td></tr>
+          <tr><td><span class="who w-b">FIEL B</span></td><td>Vota, responde, diz "Amém"</td><td>Cadastro normal, aprovado.</td></tr>
+          <tr><td><span class="who w-l">LÍDER</span></td><td>Selo "Líder", nota do pastor, avalia devocionais</td><td>Definir a função <b>Pastor</b> ou <b>Líder</b> (veja o próximo item).</td></tr>
+          <tr><td><span class="who w-adm">ADMIN</span></td><td>Painel administrativo</td><td>Conta de administrador já existente.</td></tr>
+        </table></div>
+        <ol class="steps">
+          <li>Cadastre o Fiel A, o Fiel B e o Líder pela tela de cadastro do site.</li>
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Aprovar Usuários</i></span> → aprove os três.</li>
+          <li>Separe também <b>um e-mail novo, nunca cadastrado</b>, para fazer o cadastro ao vivo no bloco 2.</li>
+          <li>Deixe cada conta logada numa janela diferente: <b>janela anônima</b> (<span class="k">Ctrl</span>+<span class="k">Shift</span>+<span class="k">N</span>) ou <b>perfis diferentes do Chrome</b>. Duas contas na mesma janela não funcionam.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-lider"><span></span></label><span class="title">Transformar a conta Líder em liderança</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Funções na Igreja</i></span>: confira se existe <b>Pastor</b> ou <b>Líder</b> marcada como liderança.</li>
+          <li><span class="path"><i>Configurações</i></span> (gestão de usuários) → editar a conta Líder → escolher a função <b>Pastor</b> ou <b>Líder</b> → salvar.</li>
+          <li>Entre com a conta Líder e confira: nos comentários aparece o selo <b>"Líder"</b> e na página <b>Devocional</b> aparece <b>"Avaliar devocionais"</b>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-cursos"><span></span></label><span class="title">Conferir os cursos e vídeos</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Pelo menos <b>3 cursos publicados</b>, de <b>categorias diferentes</b>, com <b>capa 16:9</b> (<span class="path"><i>Cursos</i></span>).</li>
+          <li>Um curso marcado em <b>"Destacar na Home (banner)"</b>.</li>
+          <li>Vídeos em <b>MP4</b> (<span class="path"><i>Gerenciar Vídeos</i></span>). Em outro formato, o botão de transmitir para a TV não aparece.</li>
+          <li>Pelo menos um curso com <b>2 aulas ou mais</b> (para a próxima aula automática).</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-uso"><span></span></label><span class="title">Gerar uso no Fiel A (progresso, ofensiva, certificado)</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Com o Fiel A, assista uma aula <b>até a metade</b> e saia. Ela aparece em "Continuar assistindo".</li>
+          <li>Conclua <b>todas as aulas de um curso</b> curto, para ter <b>certificado</b>.</li>
+          <li>Entre com o Fiel A alguns dias seguidos antes da reunião: a <b>ofensiva</b> e a primeira <b>medalha</b> (3 dias) aparecem.</li>
+          <li>Em <span class="path"><i>Meu Perfil</i></span> escolha os <b>temas de interesse</b>, o tempo por dia e o horário do lembrete.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-conteudo"><span></span></label><span class="title">Criar conteúdo de exemplo na comunidade</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Na aula da demo, deixe <b>4 a 6 comentários</b> de contas diferentes, alguns com voto "Edificante" e um com versículo.</li>
+          <li>Com o Líder, deixe uma <b>nota do pastor fixada</b> nessa aula.</li>
+          <li>Um <b>testemunho publicado</b> (enviar com Fiel B e aprovar em <span class="path"><i>Testemunhos</i></span> no admin).</li>
+          <li>Um ou dois <b>pedidos de oração</b> de contas diferentes.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-desafio-devo"><span></span></label><span class="title">Desafio ativo e devocional do dia</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Desafios</i></span> → crie "Concluir 2 aulas em 3 dias": <b>O que conta</b> = aulas concluídas, <b>Quantidade</b> = 2, <b>Duração</b> = 3 dias, "Começa quando cada pessoa entrar".</li>
+          <li>Com o Fiel A, entre no desafio (<span class="path"><i>Mais</i><i>Desafios</i><i>Participar</i></span>).</li>
+          <li>Com o Fiel B, envie um devocional (<span class="path"><i>Devocional</i><i>Enviar um devocional</i></span>).</li>
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Devocionais</i></span> → aba "Em avaliação" → <b>aprovar e agendar</b> para <b>o dia da reunião</b>. Ele aparece na tela inicial no dia.</li>
+          <li>Deixe <b>outro devocional em avaliação</b> para o Líder avaliar ao vivo.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-aparelhos"><span></span></label><span class="title">Aparelhos e link da live</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Computador ligado à TV/projetor.</li>
+          <li><span class="who w-cel">CELULAR</span> com o Fiel A logado, <b>app instalado</b> na tela inicial e <b>notificações permitidas</b>.</li>
+          <li>Se possível, uma <b>TV com Chromecast ou Apple TV</b> na mesma rede Wi-Fi do celular.</li>
+          <li>Tenha à mão o <b>link de um vídeo ou live do YouTube</b> para a demo da transmissão (pode ser uma live pública que esteja no ar).</li>
+          <li><b>Não deixe nenhuma live ativa</b> antes da reunião (só pode haver uma por vez).</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="p-acordar"><span></span></label><span class="title">30 minutos antes: acordar o servidor</span><span class="chev">›</span></summary>
+      <div class="body">
+        <div class="note tip"><b class="lbl">Muito importante</b>O servidor "dorme" quando ninguém usa. O primeiro acesso pode levar até 1 minuto. Abra o site antes do cliente chegar e navegue um pouco em <b>todas</b> as contas.</div>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 1 -->
+  <article class="card" id="b1" style="--c:#16a34a">
+    <div class="card-head">
+      <div class="num">📲</div>
+      <div><span class="sub">Bloco 1</span><h2>Baixar o app no celular</h2></div>
+      <div class="tags"><span class="tag">5 min</span></div>
+    </div>
+    <p class="lead">Primeira impressão: é um aplicativo de verdade, sem precisar de loja.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b1-landing"><span></span></label><span class="title">Página inicial e botão "Baixar App"</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>No computador, abra o site <b>sem estar logado</b> e mostre a página inicial pública.</li>
+          <li>No menu, clique em <b>"Baixar App"</b> (em verde, com ícone de download).</li>
+          <li>Abre a página <b>"Como instalar o aplicativo"</b>. Mostre que há instruções para <b>Android</b>, <b>iPhone/iPad</b> e <b>Desktop</b>.</li>
+          <li>Mostre também as páginas públicas <b>Cursos</b>, <b>Sobre</b> e <b>Ao Vivo</b> do menu.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b1-instalar"><span></span></label><span class="title">Instalar ao vivo</span><span class="who-mini">CELULAR</span><span class="chev">›</span></summary>
+      <div class="body">
+        <div class="table-scroll"><table>
+          <tr><th>Aparelho</th><th>Passo a passo</th></tr>
+          <tr><td><b>Android</b><br><small>Chrome</small></td><td>Abrir o site → menu <b>⋮</b> (canto superior) → <b>"Instalar e criar atalho"</b> (ou "Adicionar à tela inicial") → <b>"Adicionar"</b>.</td></tr>
+          <tr><td><b>iPhone / iPad</b><br><small>Safari</small></td><td>Abrir o site na tela de login → botão <b>compartilhar / "•••"</b> → <b>"Ver Mais"</b> → <b>"Adicionar à Tela de Início"</b> → <b>"Adicionar"</b>.</td></tr>
+          <tr><td><b>Computador</b><br><small>Chrome</small></td><td>Menu <b>⋮</b> → <b>"Instalar página como app…"</b> → <b>"Instalar"</b>.</td></tr>
+        </table></div>
+        <ol class="steps">
+          <li>Depois de instalar, volte à tela inicial do celular e toque no ícone <b>Missão Manancial</b>.</li>
+          <li>Mostre que abre em <b>tela cheia</b>, sem a barra do navegador, como qualquer app.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"Funciona como aplicativo, com ícone e notificações no celular, sem depender da App Store ou da Play Store. As atualizações chegam sozinhas, o fiel nunca precisa baixar de novo."</div>
+        <div class="note tip"><b class="lbl">Atenção</b>No iPhone só funciona pelo <b>Safari</b>. Se o app já estiver instalado no seu celular, apenas mostre o ícone e abra.</div>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 2 -->
+  <article class="card" id="b2" style="--c:#0ea5e9">
+    <div class="card-head">
+      <div class="num">📝</div>
+      <div><span class="sub">Bloco 2</span><h2>Cadastro e aprovação</h2></div>
+      <div class="tags"><span class="tag">5 min</span></div>
+    </div>
+    <p class="lead">Mostra que a igreja controla quem entra.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b2-cadastro"><span></span></label><span class="title">Fazer um cadastro novo</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Na tela de login, clique em <b>cadastrar</b>.</li>
+          <li>Preencha com o <b>e-mail novo</b>. Aponte os campos: nome, WhatsApp, data de nascimento, foto, estado civil e filhos, cidade/estado.</li>
+          <li>Mostre a pergunta <b>"É membro da igreja?"</b> e, se sim, <b>desde quando</b>.</li>
+          <li>Ao enviar, aparece o aviso de <b>"aguardando aprovação"</b>. Tente entrar: o login é barrado até aprovar.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b2-aprovar"><span></span></label><span class="title">Aprovar pelo Admin e primeiro acesso</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Aprovar Usuários</i></span> → encontre o cadastro novo → <b>Aprovar</b>.</li>
+          <li>Mostre que também dá para <b>Rejeitar com motivo</b> (não precisa rejeitar de fato).</li>
+          <li>A pessoa recebe um <b>e-mail</b> avisando da aprovação. Se der, mostre a caixa de entrada.</li>
+          <li>Entre com a conta nova: no primeiro acesso aparece o <b>termo de uso</b> obrigatório. Aceite.</li>
+          <li>Mostre a <b>tela inicial</b> e o aviso <b>"Perfil X% completo"</b>.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"Só entra quem a igreja aprovar. Se recusar, a pessoa recebe o motivo por e-mail."</div>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 3 -->
+  <article class="card" id="b3" style="--c:#e11d48">
+    <div class="card-head">
+      <div class="num">🎞</div>
+      <div><span class="sub">Bloco 3</span><h2>Assistir: experiência estilo Netflix</h2></div>
+      <div class="tags"><span class="tag">10 min</span><span class="tag star">★ ponto forte</span></div>
+    </div>
+    <p class="lead">Use o <span class="who w-a">FIEL A</span>, que já tem progresso.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b3-home"><span></span></label><span class="title">Tela inicial (Início)</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Clique em <b>Início</b> no menu. Comece pelo <b>banner de destaque</b> no topo.</li>
+          <li>Logo abaixo, mostre o cartão <b>Devocional do dia</b>.</li>
+          <li>Role até <b>Continuar Assistindo</b>: aponte a <b>barra de progresso</b> na capa de cada aula.</li>
+          <li>Mostre <b>Em alta esta semana</b> e o selo <b>"Em alta"</b> nas capas.</li>
+          <li>Mostre <b>Novos Cursos</b>, <b>Mais Assistidos</b>, <b>Recomendados para Você</b> e as <b>filas por tema</b> (uma por categoria, como os gêneros da Netflix). Role uma fila para o lado.</li>
+          <li>Aponte o bloco <b>Seus desafios</b> e os <b>testemunhos</b> mais votados.</li>
+          <li>No topo, mostre o <b>🔥 número da ofensiva</b>, o <b>sino</b> de notificações e a <b>lupa</b> de busca.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"As recomendações e a ordem das filas mudam conforme os temas que cada pessoa escolhe no perfil. Cada fiel vê uma tela inicial diferente."</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b3-menu"><span></span></label><span class="title">Navegação: menu Mais e menu do avatar</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Menu de cima: <b>Início</b>, <b>Ao Vivo</b>, <b>Cursos</b>, <b>Devocional</b> e <b>Mais</b> (Testemunhos, Desafios, Categorias, Sobre, Contato).</li>
+          <li>Clique na <b>foto (avatar)</b> no canto direito: Meu Perfil, Meu Progresso, Ofensiva e Ranking, Certificados, Histórico, Favoritos, Configurações, <b>Pessoas online</b> e <b>Tema claro/escuro</b>.</li>
+          <li>Troque o <b>tema</b> para mostrar o claro e o escuro.</li>
+          <li><span class="who w-cel">CELULAR</span> no celular, o menu abre pelo botão <b>☰</b> como um painel lateral.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b3-player"><span></span></label><span class="title">Player: volta de onde parou e velocidade</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Em <b>Continuar Assistindo</b>, clique na aula assistida pela metade.</li>
+          <li>O vídeo <b>volta de onde parou</b>. Mostre o botão <b>"Começar do início"</b> que aparece junto.</li>
+          <li>Na barra do player, abra a <b>velocidade</b> e escolha <b>1,5x</b> (vai de 0,75x a 2x).</li>
+          <li>Abra <b>outra aula</b>: a velocidade continua em 1,5x (fica salva para todas as aulas). Volte para 1x.</li>
+          <li>Mostre ao lado do título o <b>número de visualizações</b>, a lista de aulas com a <b>barra de cada uma</b> e o <b>% do curso</b> concluído.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b3-proxima"><span></span></label><span class="title">Próxima aula automática</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Arraste o vídeo para os <b>últimos 5 segundos</b>.</li>
+          <li>Ao terminar aparece <b>"Próxima aula em 5s"</b> com contagem regressiva.</li>
+          <li>Mostre o botão de <b>cancelar</b>. Depois deixe passar para abrir a próxima aula.</li>
+          <li>Na última aula do curso, aparece um aviso de fim de curso.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b3-tv"><span></span></label><span class="title">Transmitir para a TV (Chromecast / AirPlay)</span><span class="who-mini">CELULAR</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-cel">CELULAR</span> abra uma aula com o Fiel A.</li>
+          <li>Na barra do player, toque em <b>📺 Transmitir</b> e escolha a TV.</li>
+          <li>O botão fica azul, <b>"Transmitindo"</b>. Pause e avance pelo celular: ele vira controle remoto.</li>
+          <li>Para parar, toque de novo em Transmitir.</li>
+        </ol>
+        <div class="note tip"><b class="lbl">Atenção</b>O botão só aparece quando há uma TV disponível na mesma rede. <b>iPhone usa AirPlay</b> (Apple TV), <b>Android usa Chromecast</b>. No computador não há botão: menu <b>⋮</b> do Chrome → "Transmitir…". Ao ir para a próxima aula é preciso transmitir de novo. <b>Sem TV na sala, só comente e siga.</b></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b3-extras"><span></span></label><span class="title">Busca, favoritos, histórico e Meu Progresso</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Clique na <b>lupa</b> e busque uma palavra do título de um curso.</li>
+          <li>Favorite uma aula (❤) e abra <span class="path"><i>avatar</i><i>Favoritos</i></span>.</li>
+          <li>Abra <span class="path"><i>avatar</i><i>Histórico</i></span> e <span class="path"><i>avatar</i><i>Meu Progresso</i></span>.</li>
+        </ol>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 4 -->
+  <article class="card" id="b4" style="--c:#7c3aed">
+    <div class="card-head">
+      <div class="num">💬</div>
+      <div><span class="sub">Bloco 4</span><h2>A comunidade dentro da aula</h2></div>
+      <div class="tags"><span class="tag">15 min</span><span class="tag star">★ diferencial</span></div>
+    </div>
+    <p class="lead">Abra a <b>mesma aula</b> nas janelas <span class="who w-a">FIEL A</span>, <span class="who w-b">FIEL B</span> e <span class="who w-l">LÍDER</span>. Abaixo do vídeo ficam as abas <b>Comunidade · Resumos · Orações · Minhas notas</b>. Alterne as janelas para mostrar uma pessoa reagindo à outra.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b4-coment"><span></span></label><span class="title">Comentar com versículo e minuto da aula</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> na aba <b>Comunidade</b>, dê play e pause num trecho.</li>
+          <li>Escreva o comentário e clique em <b>"Momento da aula"</b>: o minuto atual entra no comentário.</li>
+          <li>Clique em <b>"Versículo"</b> e cite um (ex.: João 3:16).</li>
+          <li>Clique em <b>Comentar</b>.</li>
+          <li>Clique no <b>minuto citado</b> no comentário: o vídeo pula para aquele trecho.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b4-votos"><span></span></label><span class="title">Votos, respostas e abas de ordenação</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-b">FIEL B</span> recarregue a aula, vote <b>"Edificante"</b> no comentário do Fiel A.</li>
+          <li>Mostre que também existe o voto <b>"Fora de contexto"</b>.</li>
+          <li>Clique em <b>"Responder"</b> e escreva uma resposta. O comentário passa a mostrar "Responder (1)".</li>
+          <li>Mostre as abas <b>Mais relevantes · Mais recentes · Líderes · Com versículo</b>.</li>
+          <li>Aponte o comentário mais votado <b>em destaque</b> no topo.</li>
+          <li>Role até o fim e mostre <b>"Ver mais X comentários"</b> (eles vêm de 10 em 10).</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b4-lider"><span></span></label><span class="title">Selo "Líder", nota do pastor e selos ao lado do nome</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-l">LÍDER</span> responda um comentário: aparece o selo <b>"Líder"</b> ao lado do nome.</li>
+          <li>Mostre a <b>nota do pastor fixada</b> no topo dos comentários (preparada antes).</li>
+          <li>Aponte os <b>selos ao lado do nome</b> de quem comenta: função na igreja, tempo de membresia e maior medalha.</li>
+          <li>Clique na aba <b>Líderes</b>: só os comentários da liderança.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b4-share"><span></span></label><span class="title">Compartilhar um comentário</span><span class="who-mini">CELULAR</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-cel">CELULAR</span> toque em <b>Compartilhar</b> num comentário.</li>
+          <li>Abre o compartilhar do celular: escolha o <b>WhatsApp</b> (pode mandar para você mesmo).</li>
+          <li>Abra o link recebido: ele abre a aula <b>direto naquele comentário</b>, destacado.</li>
+        </ol>
+        <div class="note tip"><b class="lbl">No computador</b>O link é copiado. Cole numa nova aba para mostrar.</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b4-notas"><span></span></label><span class="title">Minhas notas</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> abra a aba <b>Minhas notas</b> e dê play no vídeo.</li>
+          <li>Comece a escrever: o <b>minuto em que o vídeo está</b> entra sozinho na nota.</li>
+          <li>Clique em <b>Salvar nota</b> (ou <span class="k">Ctrl</span>+<span class="k">Enter</span>).</li>
+          <li>Avance o vídeo, escreva outra nota e use <b>"Marcar o minuto atual"</b>. A lista fica na ordem do vídeo.</li>
+          <li>Clique no minuto de uma nota: o vídeo volta ao trecho. Mostre <b>editar</b> e <b>apagar</b>.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"Só a própria pessoa vê as notas, nem a equipe da igreja tem acesso. É como um caderno de anotações dentro da aula."</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b4-resumo"><span></span></label><span class="title">Resumos da aula</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> aba <b>Resumos</b> → <b>"Escrever meu resumo"</b>.</li>
+          <li>Clique em <b>"Trazer minhas notas"</b>: as notas da aula entram no texto como rascunho.</li>
+          <li>Complete até passar de 100 caracteres (o contador mostra quanto falta) → <b>Publicar resumo</b>.</li>
+          <li>O resumo aparece no topo como <b>"Seu resumo"</b>, com editar e remover.</li>
+          <li><span class="who w-b">FIEL B</span> recarregue a aula e vote <b>Edificante</b> no resumo.</li>
+          <li><span class="who w-cel">CELULAR</span> o Fiel A recebe o aviso <b>"Seu resumo edificou alguém"</b>. Toque no aviso: abre a aula com o resumo piscando.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b4-oracao"><span></span></label><span class="title">Orações com "Amém" e oração atendida</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> aba <b>Orações</b> → escreva um pedido. Mostre a opção <b>"Pedir sem o meu nome"</b> → <b>Pedir oração</b>.</li>
+          <li><span class="who w-b">FIEL B</span> recarregue e toque <b>🙏 Amém</b>. O botão vira <b>"Orei"</b> e aparece "1 pessoa orou".</li>
+          <li><span class="who w-cel">CELULAR</span> o Fiel A recebe <b>"Alguém orou pelo seu pedido"</b>.</li>
+          <li><span class="who w-a">FIEL A</span> no pedido, <b>Marcar como atendida</b> → escreva como Deus respondeu → salvar. Aparece o selo verde <b>"Oração atendida"</b>.</li>
+          <li><span class="who w-b">FIEL B</span> no sino, aparece "Uma oração que você fez foi atendida! 🙌".</li>
+          <li>No pedido atendido, mostre o link <b>"Contar como testemunho"</b> (abre o formulário de testemunho).</li>
+          <li>Mostre os filtros <b>Pedidos · Atendidas · Meus pedidos</b>.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"É um mural de oração da igreja inteira, que aparece em qualquer aula. A pessoa sabe que estão orando por ela."</div>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 5 -->
+  <article class="card" id="b5" style="--c:#d97706">
+    <div class="card-head">
+      <div class="num">🌱</div>
+      <div><span class="sub">Bloco 5</span><h2>Crescer na fé</h2></div>
+      <div class="tags"><span class="tag">12 min</span></div>
+    </div>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b5-test"><span></span></label><span class="title">Mural de testemunhos</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> <span class="path"><i>Mais</i><i>Testemunhos</i></span> → conte um testemunho (pode marcar como anônimo) → enviar.</li>
+          <li>Mostre em "Meus testemunhos" o status <b>esperando aprovação</b>.</li>
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Testemunhos</i></span> → <b>aprovar</b> (mostre que dá para recusar com motivo).</li>
+          <li><span class="who w-cel">CELULAR</span> o autor recebe o aviso de publicado.</li>
+          <li><span class="who w-b">FIEL B</span> vote <b>Edificante</b>. Mostre as abas <b>Mais votados / Mais recentes</b>.</li>
+          <li>Volte ao <b>Início</b>: os 3 testemunhos mais votados aparecem num bloco.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b5-devo"><span></span></label><span class="title">Devocional do dia escrito pelos fiéis</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> menu <b>Devocional</b>: mostre o <b>devocional do dia</b> (tema, título, texto base, texto, autor) e os <b>anteriores</b>.</li>
+          <li>Clique em <b>"Enviar um devocional"</b>: título, texto base (referência e versículo), tema e texto (mín. 200 caracteres) → enviar.</li>
+          <li>Mostre em <b>Meus devocionais</b> o status "em avaliação".</li>
+          <li><span class="who w-l">LÍDER</span> menu <b>Devocional</b> → <b>"Avaliar devocionais"</b> → abra o que estava em avaliação → dê de <b>1 a 5 estrelas</b>.</li>
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Devocionais</i></span>: mostre a <b>regra da agenda</b> (mín. de avaliações e média) e as abas Em avaliação, Agenda, Publicados, Recusados.</li>
+          <li>Mostre a aba <b>Agenda</b>: os aprovados entram sozinhos na próxima data livre, um por dia. Dá para <b>trocar a data</b> ou <b>recusar com motivo</b>.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"O lembrete diário no celular leva o devocional do dia. A igreja tem conteúdo todo dia sem sobrecarregar a equipe, e os membros participam."</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b5-desafio"><span></span></label><span class="title">Desafios</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Desafios</i></span> → novo desafio. Mostre as opções de <b>O que conta</b>: aulas concluídas, dias no app, comentários, resumos, améns ou <b>"marcar como feito"</b>.</li>
+          <li>Crie "Ler 1 capítulo por dia": O que conta = <b>marcar como feito</b>, <b>Todo dia</b>, duração 7 dias. Marque <b>"Avisar todos os fiéis"</b>.</li>
+          <li><span class="who w-a">FIEL A</span> <span class="path"><i>Mais</i><i>Desafios</i></span> → em "Desafios abertos", <b>Participar</b>.</li>
+          <li>Mostre a barra de progresso, as <b>bolinhas por dia</b> e o prazo ("Faltam 7 dias"). Toque em <b>"Fiz hoje"</b>.</li>
+          <li>Mostre o desafio "Concluir 2 aulas" (preparado antes): conclua uma aula e volte. <b>O progresso andou sozinho.</b></li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b5-medalha"><span></span></label><span class="title">Ofensiva, ranking e medalhas</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> clique no <b>🔥</b> do topo (ou <span class="path"><i>avatar</i><i>Ofensiva e Ranking</i></span>): dias seguidos, recorde e ranking.</li>
+          <li>Mostre as medalhas de ofensiva (de 3 a 365 dias: <b>Sequência de 7</b>, <b>Discípulo de 21</b>, <b>Centenário</b>…).</li>
+          <li>Clique em <b>"todas as minhas medalhas"</b>: vai ao perfil, com as categorias <b>ofensiva, ensino, resumos, oração e desafios</b> e o progresso de cada uma ("faltam 3 resumos").</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b5-perfil"><span></span></label><span class="title">Perfil completo e preferências</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="path"><i>avatar</i><i>Meu Perfil</i></span>: mostre a foto, os <b>selos no topo</b> (função, tempo de membresia, maior medalha) e a barra <b>"Perfil X% completo"</b>.</li>
+          <li>Mostre o <b>tempo de membresia</b> ("3 anos e 2 meses") e, se for o dia, o "Feliz aniversário!".</li>
+          <li>Mostre que a <b>função na igreja</b> aparece mas não pode ser editada pelo fiel (só o admin define).</li>
+          <li>Abra as <b>preferências de conteúdo</b>: temas de interesse, tempo por dia e horário do <b>lembrete diário</b>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b5-cert"><span></span></label><span class="title">Certificado: baixar em PDF</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="path"><i>avatar</i><i>Certificados</i></span>.</li>
+          <li>No curso concluído, clique em <b>"Baixar PDF"</b>.</li>
+          <li>Abra o PDF baixado e mostre.</li>
+        </ol>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 6 -->
+  <article class="card" id="b6" style="--c:#dc2626">
+    <div class="card-head">
+      <div class="num">🔴</div>
+      <div><span class="sub">Bloco 6</span><h2>Transmissão ao vivo</h2></div>
+      <div class="tags"><span class="tag">8 min</span><span class="tag star">★ impacta muito</span></div>
+    </div>
+    <p class="lead">Deixe o <span class="who w-adm">ADMIN</span> no computador e o <span class="who w-a">FIEL A</span> no celular. O <span class="who w-b">FIEL B</span> fica numa janela do computador.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b6-criar"><span></span></label><span class="title">Criar a transmissão (fica agendada)</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> menu lateral <span class="path"><i>Ao Vivo</i></span>.</li>
+          <li>Em <b>Nova transmissão</b>, preencha o <b>Título</b> (ex.: "Culto de domingo").</li>
+          <li>Em <b>Link ou ID do YouTube</b>, cole o link da live.</li>
+          <li>Em <b>"Escolha para quem será a live"</b>, mostre as opções de público e escolha todos os fiéis.</li>
+          <li>Clique em <b>Criar transmissão</b>. Ela fica <b>agendada</b> e os fiéis recebem "Nova transmissão agendada".</li>
+          <li><span class="who w-cel">CELULAR</span> mostre a notificação chegando no Fiel A.</li>
+        </ol>
+        <div class="note tip"><b class="lbl">Atenção</b>Só existe <b>uma transmissão por vez</b>. Se aparecer erro ao criar, encerre ou exclua a anterior na lista <b>Transmissões</b>.</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b6-iniciar"><span></span></label><span class="title">Colocar no ar</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> na lista <b>Transmissões</b>, clique no botão vermelho <b>Ao Vivo</b> da transmissão criada.</li>
+          <li><span class="who w-cel">CELULAR</span> o Fiel A recebe o aviso de que a live começou.</li>
+          <li><span class="who w-a">FIEL A</span> o item <b>Ao Vivo</b> do menu fica com o <b>ponto vermelho piscando</b>.</li>
+          <li>Mostre que dá para <b>Alterar público</b> com a live no ar.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b6-fiel"><span></span></label><span class="title">Fiel assiste com chat ao lado</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> toque em <b>Ao Vivo</b>: o vídeo abre com o <b>chat próprio ao lado</b> (estilo YouTube; no celular fica abaixo).</li>
+          <li>Mande uma mensagem pelo Fiel A e outra pelo <span class="who w-b">FIEL B</span>: aparecem em tempo real nas duas telas.</li>
+          <li>Mostre que a live também tem o botão de transmitir para a TV do próprio YouTube.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b6-mod"><span></span></label><span class="title">Moderação do chat em tempo real</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> na mesma tela, painel <b>Chat (moderação)</b>: as mensagens chegam em tempo real.</li>
+          <li>Numa mensagem do Fiel B, clique em <b>Ocultar</b> (some para todos e pode voltar com <b>Mostrar</b>) ou <b>Excluir</b> (definitivo).</li>
+          <li>Clique em <b>🚫 Bloquear do chat</b> no Fiel B e escolha o prazo: <b>1 hora, 1 dia, 7 dias, 30 dias ou Permanente</b>.</li>
+          <li><span class="who w-b">FIEL B</span> o campo do chat <b>trava na hora</b>.</li>
+          <li>Mostre a lista <b>Bloqueados do chat</b> e clique em <b>Desbloquear</b>.</li>
+          <li>Clique em <b>Encerrar</b>. Os fiéis recebem o aviso de encerramento e o ponto vermelho some.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"A igreja reúne os membros ao vivo num ambiente próprio e seguro, com controle total do chat, e avisa todo mundo no celular quando começa."</div>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 7 -->
+  <article class="card" id="b7" style="--c:#4f46e5">
+    <div class="card-head">
+      <div class="num">🛠</div>
+      <div><span class="sub">Bloco 7</span><h2>Painel da igreja (Admin)</h2></div>
+      <div class="tags"><span class="tag">10 min</span></div>
+    </div>
+    <p class="lead">Use a conta <span class="who w-adm">ADMIN</span>. Mostre o <b>menu lateral</b> e que ele <b>recolhe</b> para ganhar espaço.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b7-dash"><span></span></label><span class="title">Dashboard</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="path"><i>Dashboard</i></span>: números gerais da plataforma.</li>
+          <li>Clique no botão de recolher o menu lateral e depois abra de novo.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b7-cursos"><span></span></label><span class="title">Cursos e vídeos</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="path"><i>Cursos</i></span> → novo curso: título, descrição, categoria, nível (Iniciante/Intermediário/Avançado), professor/ministrante, carga horária e <b>capa</b>.</li>
+          <li>Mostre as opções <b>"Curso gratuito (liberado sem assinatura)"</b>, <b>"Destacar na Home (banner)"</b> e o status <b>Rascunho / Publicado / Arquivado</b>.</li>
+          <li>Mostre o ajuste do selo <b>"Em alta"</b>: "Mínimo de pessoas em 7 dias".</li>
+          <li><span class="path"><i>Gerenciar Vídeos</i></span>: escolher o curso, módulo, ordem e <b>Enviar vídeo</b>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b7-usuarios"><span></span></label><span class="title">Usuários, funções, permissões e progresso</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="path"><i>Configurações</i></span>: lista de usuários. Edite um e mostre os dados e a <b>função na igreja</b>.</li>
+          <li><span class="path"><i>Funções na Igreja</i></span>: a lista de funções (Membro, Líder, Pastor…) e quais são liderança.</li>
+          <li><span class="path"><i>Permissões</i></span>: o que cada pessoa da equipe pode fazer.</li>
+          <li><span class="path"><i>Ver Progresso</i></span> → escolha um usuário: cursos e andamento daquele fiel.</li>
+          <li><span class="path"><i>Online e Ofensiva</i></span>: quem está online agora e as ofensivas.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b7-notif"><span></span></label><span class="title">Enviar mensagem para os fiéis</span><span class="who-mini">CELULAR</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="path"><i>Enviar Mensagem</i></span>.</li>
+          <li><b>Destino</b>: mostre as opções Todos os fiéis, Todos os usuários, Todos os admins ou <b>Selecionar indivíduos</b>. Escolha o Fiel A.</li>
+          <li><b>Tipo</b> (Informação, Aviso, Sucesso…), <b>Título</b> e <b>Mensagem</b>.</li>
+          <li>Em <b>"Ao clicar na notificação, levar para"</b>, escolha <b>Um curso específico</b>.</li>
+          <li>Envie. <span class="who w-cel">CELULAR</span> a notificação chega no celular; ao tocar, abre o curso. Mostre também no <b>sino</b>.</li>
+        </ol>
+      </div>
+    </details>
+  </article>
+
+  <!-- BLOCO 8 -->
+  <article class="card" id="b8" style="--c:#0891b2">
+    <div class="card-head">
+      <div class="num">💳</div>
+      <div><span class="sub">Bloco 8</span><h2>Assinaturas</h2></div>
+      <div class="tags"><span class="tag">5 min</span><span class="tag">pronto · aguardando decisão</span></div>
+    </div>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b8-assin"><span></span></label><span class="title">Planos e pagamento de teste</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-a">FIEL A</span> <span class="path"><i>avatar</i><i>Assinatura</i></span> (aparece quando o módulo está ativo).</li>
+          <li>Mostre os <b>planos</b> (individual, família, igreja) e escolha um.</li>
+          <li>O pagamento abre em outra aba: mostre <b>Pix, boleto e cartão</b>. Pague com <b>Pix de teste</b>.</li>
+          <li>Volte: a assinatura aparece ativa, com a opção de <b>cancelar</b>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="b8-admin"><span></span></label><span class="title">Painel de assinaturas no admin</span><span class="chev">›</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><span class="who w-adm">ADMIN</span> <span class="path"><i>Assinaturas</i></span>.</li>
+          <li>Mostre <b>planos</b>, <b>assinantes</b>, <b>cortesia</b> (dar acesso grátis a alguém) e <b>teste grátis</b>.</li>
+          <li>Mostre <b>"Quem pode assistir"</b>: livre para todos, conteúdo pago ou só assinantes.</li>
+        </ol>
+        <div class="note say"><b class="lbl">O que falar</b>"Está tudo pronto e integrado, mas em ambiente de teste: nada é cobrado. Para começar a cobrar só falta a igreja definir os valores e a conta que vai receber."</div>
+      </div>
+    </details>
+  </article>
+
+  <!-- FECHAMENTO -->
+  <article class="card" id="fim" style="--c:#18794e">
+    <div class="card-head">
+      <div class="num">🤝</div>
+      <div><span class="sub">Final</span><h2>Fechamento: perguntas para o cliente</h2></div>
+      <div class="tags"><span class="tag">10 min</span></div>
+    </div>
+    <p class="lead">Anote as respostas. Elas destravam os próximos recursos. Veja também a aba <a href="#" data-goto="pdf">Pontos do PDF</a>.</p>
+
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="f-1"><span></span></label><span class="title">Assinaturas: valores e conta</span><span class="chev">›</span></summary>
+      <div class="body"><ul><li>O anual de R$ 19,90 é <b>por mês ou o total do ano</b>?</li><li>O Família de R$ 39,00 é <b>mensal ou anual</b>?</li><li>Qual <b>conta</b> recebe os pagamentos?</li><li>O que fica gratuito e o que é só para assinantes?</li></ul></div>
+    </details>
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="f-2"><span></span></label><span class="title">Um site por igreja e vínculo com igreja/célula</span><span class="chev">›</span></summary>
+      <div class="body"><ul><li>Cada igreja terá o seu app ou será um só para todas?</li><li>Quais igrejas e células existem? Quem troca a célula da pessoa?</li><li>Quais etapas de "tempo de fé"?</li></ul></div>
+    </details>
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="f-3"><span></span></label><span class="title">Títulos e medalhas</span><span class="chev">›</span></summary>
+      <div class="body"><ul><li>Quais <b>títulos</b> existem ("Discípula fiel"…) e a regra de cada um?</li><li>"Resposta útil" pode ser <b>3 votos Edificante</b>, como está hoje?</li></ul></div>
+    </details>
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="f-4"><span></span></label><span class="title">Devocionais</span><span class="chev">›</span></summary>
+      <div class="body"><ul><li>Quem são os líderes que avaliam?</li><li>A regra atual (<b>3 avaliações, média 4</b>) está boa?</li></ul></div>
+    </details>
+    <details>
+      <summary><label class="check"><input type="checkbox" data-k="f-5"><span></span></label><span class="title">Prioridade dos próximos recursos</span><span class="chev">›</span></summary>
+      <div class="body"><ul><li><b>Bíblia</b>: quais versões são obrigatórias?</li><li><b>Biblioteca de livros</b>: quais livros e quem tem os direitos?</li><li><b>Missões</b>: quais projetos e como contribuir?</li><li><b>Devocional no WhatsApp</b> e <b>legenda automática</b>: qual a prioridade?</li></ul></div>
+    </details>
+  </article>
+
+  <!-- CUIDADOS -->
+  <article class="card" id="cuidado" style="--c:#b3261e">
+    <div class="card-head">
+      <div class="num">⚠️</div>
+      <div><span class="sub">Leia antes</span><h2>Cuidados</h2></div>
+    </div>
+    <div class="two">
+      <div class="box stop">
+        <h3>🚫 Não prometer (ainda não existe)</h3>
+        <ul>
+          <li>Bíblia integrada e planos de leitura</li>
+          <li>Biblioteca de livros digitais</li>
+          <li>Legenda automática nos vídeos</li>
+          <li>Devocional pelo WhatsApp</li>
+          <li>Contribuição em missões</li>
+          <li>Moeda interna e títulos no perfil</li>
+          <li>Vínculo com igreja/célula</li>
+        </ul>
+        <p style="margin:8px 0 0;font-size:.92rem">Se perguntarem: <i>"Está no planejamento e depende de algumas definições da igreja. Vamos anotar."</i></p>
+      </div>
+      <div class="box okb">
+        <h3>🧯 Se algo der errado</h3>
+        <ul>
+          <li><b>Página demorando:</b> o servidor estava dormindo. Espere até 1 min e recarregue.</li>
+          <li><b>Notificação não chegou:</b> confira a permissão do celular. O aviso também fica no sino.</li>
+          <li><b>Botão de TV não aparece:</b> TV na mesma rede; iPhone só AirPlay; Firefox não transmite.</li>
+          <li><b>Não consegue criar a live:</b> já existe outra; encerre ou exclua.</li>
+          <li><b>Voto/amém não aparece na outra janela:</b> recarregue a página.</li>
+          <li><b>Tela vazia:</b> faltou preparar dados. Comente o recurso e siga.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- =====================================================================
+     ABA 2 — PONTOS DO PDF
+     ===================================================================== -->
+<section class="panel" id="p-pdf" role="tabpanel">
+  <div class="intro">
+    <h2>📄 O que o cliente pediu no PDF</h2>
+    <p>Cada tópico do documento de ideias do cliente ("Aplicativo"), o que já foi feito e o que falta. Situação em 11/10/2026.</p>
+    <div class="stats">
+      <div class="stat s-ok"><div class="n" id="st-ok">0</div><div class="l">Entregues</div></div>
+      <div class="stat s-part"><div class="n" id="st-part">0</div><div class="l">Em parte</div></div>
+      <div class="stat s-wait"><div class="n" id="st-wait">0</div><div class="l">Aguardando cliente</div></div>
+      <div class="stat s-no"><div class="n" id="st-no">0</div><div class="l">Não começou</div></div>
+    </div>
+  </div>
+
+  <div class="filters" role="group" aria-label="Filtrar">
+    <button class="filter" data-f="all" aria-pressed="true">Todos</button>
+    <button class="filter" data-f="ok" aria-pressed="false">✅ Entregues</button>
+    <button class="filter" data-f="part" aria-pressed="false">🟡 Em parte</button>
+    <button class="filter" data-f="wait" aria-pressed="false">⏸ Aguardando</button>
+    <button class="filter" data-f="no" aria-pressed="false">⬜ Não começou</button>
+  </div>
+
+  <div class="pdf-list">
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">1</div>
+      <div>
+        <h3>Tela inicial estilo Netflix <span class="badge b-ok">✅ Entregue</span></h3>
+        <p class="ask">Pedido: tela inicial com filas de conteúdo por tema.</p>
+        <ul>
+          <li>Banner de destaque e filas: Continuar Assistindo, Novos Cursos, Mais Assistidos, Em alta, Recomendados.</li>
+          <li>Filas por tema (categoria), ajustadas às preferências de cada pessoa.</li>
+        </ul>
+        <div class="show">▶ Mostrar: <a href="#b3" data-goto="roteiro">Bloco 3 · Tela inicial</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">1.2</div>
+      <div>
+        <h3>Continuar assistindo e barra de progresso <span class="badge b-ok">✅ Entregue</span></h3>
+        <p class="ask">Pedido: continuar de onde parou e ver o progresso do vídeo e do curso.</p>
+        <ul>
+          <li>O vídeo volta de onde a pessoa parou, com opção de começar do início.</li>
+          <li>Barra de progresso em cada aula e % do curso no card, na página do curso e no player.</li>
+        </ul>
+        <div class="show">▶ Mostrar: <a href="#b3" data-goto="roteiro">Bloco 3 · Player</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">1.3</div>
+      <div>
+        <h3>Próximo episódio automático <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul><li>"Próxima aula em 5s" com contagem e botão de cancelar; aviso no fim do curso.</li></ul>
+        <div class="show">▶ Mostrar: <a href="#b3" data-goto="roteiro">Bloco 3 · Próxima aula</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">1.4</div>
+      <div>
+        <h3>Velocidade até 2x <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul><li>De 0,75x a 2x, funciona em qualquer navegador e celular, e a escolha fica salva para todas as aulas.</li></ul>
+        <div class="show">▶ Mostrar: <a href="#b3" data-goto="roteiro">Bloco 3 · Player</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="no">
+      <div class="pn">1.5</div>
+      <div>
+        <h3>Legenda automática <span class="badge b-no">⬜ Não começou</span></h3>
+        <div class="missing"><b>O que seria preciso:</b> transcrever os vídeos com um serviço de IA e exibir as legendas no player. Tem custo por minuto de vídeo.</div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">1.6</div>
+      <div>
+        <h3>Mural de testemunhos <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul>
+          <li>Envio pelo fiel (pode ser anônimo), aprovação da equipe antes de publicar e aviso ao autor.</li>
+          <li>Voto "Edificante", abas Mais votados / Mais recentes e os 3 mais votados na tela inicial.</li>
+          <li>Oração atendida pode virar testemunho com um toque.</li>
+        </ul>
+        <div class="show">▶ Mostrar: <a href="#b5" data-goto="roteiro">Bloco 5 · Testemunhos</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">1.7</div>
+      <div>
+        <h3>Selo "Em alta" <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul><li>Cursos e aulas mais vistos da semana ganham o selo; fila "Em alta esta semana" na home; mínimo ajustável no admin.</li></ul>
+        <div class="show">▶ Mostrar: <a href="#b3" data-goto="roteiro">Bloco 3 · Tela inicial</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">1.8</div>
+      <div>
+        <h3>Chromecast e AirPlay <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul>
+          <li>Botão "Transmitir" no player: AirPlay no iPhone/iPad/Mac e Chromecast no Android; o progresso continua salvo.</li>
+          <li>No computador, pelo menu do Chrome. Botão próprio no computador é opcional (decisão do cliente).</li>
+        </ul>
+        <div class="show">▶ Mostrar: <a href="#b3" data-goto="roteiro">Bloco 3 · TV</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="no">
+      <div class="pn">1.9</div>
+      <div>
+        <h3>Devocional diário no WhatsApp <span class="badge b-no">⬜ Não começou</span></h3>
+        <div class="missing"><b>Já existe a base:</b> devocional do dia no app e lembrete diário no celular. <b>Falta:</b> integração com o WhatsApp Business (custo por mensagem e aprovação da Meta).</div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="no">
+      <div class="pn">2</div>
+      <div>
+        <h3>Bíblia integrada, com versões e planos de leitura <span class="badge b-no">⬜ Não começou</span></h3>
+        <div class="missing"><b>Precisamos saber:</b> quais versões são obrigatórias (cada versão tem licença).</div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="no">
+      <div class="pn">2.2</div>
+      <div>
+        <h3>Biblioteca de livros digitais <span class="badge b-no">⬜ Não começou</span></h3>
+        <div class="missing"><b>Proposta já enviada.</b> <b>Precisamos saber:</b> quais livros e quem tem os direitos.</div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="part">
+      <div class="pn">3</div>
+      <div>
+        <h3>Selo de identificação e cadastro completo <span class="badge b-part">🟡 Em parte</span></h3>
+        <ul>
+          <li>Perfil com WhatsApp, nascimento, foto, família e cidade; "Perfil X% completo".</li>
+          <li>Função na igreja definida pelo admin; selos no perfil e nos comentários.</li>
+          <li>Preferências de conteúdo (temas, tempo por dia, lembrete diário).</li>
+        </ul>
+        <div class="missing"><b>Falta:</b> vínculo com igreja/célula e tempo de fé (depende de "um site por igreja") e os <b>títulos</b> ("Discípula fiel"…), que precisam da lista e das regras.</div>
+        <div class="show">▶ Mostrar: <a href="#b5" data-goto="roteiro">Bloco 5 · Perfil</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">3.2</div>
+      <div>
+        <h3>Membro ou não membro, com tempo de membresia <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul><li>No cadastro e no perfil; o perfil mostra "3 anos e 2 meses" e o selo de tempo de membresia.</li></ul>
+        <div class="show">▶ Mostrar: <a href="#b2" data-goto="roteiro">Bloco 2 · Cadastro</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="part">
+      <div class="pn">3.3</div>
+      <div>
+        <h3>Gamificação: medalhas, desafios e moeda interna <span class="badge b-part">🟡 Em parte</span></h3>
+        <ul>
+          <li>Ofensiva com ranking e medalhas de 3 a 365 dias (Sequência de 7, Discípulo de 21, Centenário).</li>
+          <li>Medalhas de ensino, resumos e oração (Voz da paz, Escriba, Guerreiro de oração…), com progresso no perfil.</li>
+          <li>Desafios criados pela igreja, com progresso automático e medalhas de desafio.</li>
+          <li>Certificados de curso.</li>
+        </ul>
+        <div class="missing"><b>Falta:</b> a <b>moeda interna</b> (depende das assinaturas em produção e das regras de troca).</div>
+        <div class="show">▶ Mostrar: <a href="#b5" data-goto="roteiro">Bloco 5 · Desafios e medalhas</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">4</div>
+      <div>
+        <h3>Comunidade nos comentários <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul>
+          <li>Visualizações, "Ver mais comentários", votos Edificante e Fora de contexto.</li>
+          <li>Abas Mais relevantes, Mais recentes, Líderes e Com versículo; mais votado em destaque.</li>
+          <li>Respostas com selo "Líder", nota do pastor fixada, compartilhar comentário, citar versículo e minuto.</li>
+          <li>Abas <b>Resumos</b>, <b>Orações</b> (com "Amém") e <b>Minhas notas</b> ao lado de Comunidade.</li>
+        </ul>
+        <div class="show">▶ Mostrar: <a href="#b4" data-goto="roteiro">Bloco 4 inteiro</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ok">
+      <div class="pn">4.2</div>
+      <div>
+        <h3>Devocionais enviados pelos usuários <span class="badge b-ok">✅ Entregue</span></h3>
+        <ul>
+          <li>Fiéis enviam, líderes dão de 1 a 5 estrelas, aprovação e agenda automáticas (um por dia).</li>
+          <li>Devocional do dia na home e no lembrete diário; painel do admin para agenda e moderação.</li>
+        </ul>
+        <div class="missing"><b>A confirmar:</b> quem são os líderes que votam e a nota mínima (hoje: 3 avaliações, média 4).</div>
+        <div class="show">▶ Mostrar: <a href="#b5" data-goto="roteiro">Bloco 5 · Devocional</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="wait">
+      <div class="pn">5</div>
+      <div>
+        <h3>Planos de assinatura <span class="badge b-wait">⏸ Aguardando cliente</span></h3>
+        <ul>
+          <li>Sistema pronto e integrado ao Asaas, em ambiente de teste: Pix, boleto e cartão, liberação automática, cancelamento.</li>
+          <li>Família/Igreja: o titular adiciona as pessoas. Admin com planos, assinantes, cortesia e teste grátis.</li>
+        </ul>
+        <div class="missing"><b>Precisamos saber:</b> valores finais (anual R$ 19,90 é mensal ou total? Família R$ 39,00 é mensal ou anual?), conta que recebe e regras de acesso.</div>
+        <div class="show">▶ Mostrar: <a href="#b8" data-goto="roteiro">Bloco 8 · Assinaturas</a></div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="no">
+      <div class="pn">6</div>
+      <div>
+        <h3>Contribuição em missões <span class="badge b-no">⬜ Não começou</span></h3>
+        <div class="missing"><b>Proposta já enviada:</b> página de projetos com meta e valor arrecadado, contribuição via Pix ou cartão pelo mesmo Asaas. <b>Precisamos saber:</b> projetos e regras.</div>
+      </div>
+    </div>
+
+    <div class="pdf-item" data-s="ref">
+      <div class="pn">7</div>
+      <div>
+        <h3>Referências de estilo <span class="badge" style="background:var(--gray-soft);color:var(--muted)">Guia de estilo</span></h3>
+        <ul><li>RightNow Media, Glorify, Na Mesa, Getsermons e Hallow: usados como inspiração de visual e experiência.</li></ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =====================================================================
+     ABA 3 — PROJETO GERAL
+     ===================================================================== -->
+<section class="panel" id="p-projeto" role="tabpanel">
+  <div class="pitch">
+    <h2>⛪ Tudo o que o MananciAPP oferece para a igreja</h2>
+    <p>Uma plataforma de ensino da igreja com cara de Netflix, onde o fiel <b>assiste, participa e cresce na fé</b> em comunidade, e a liderança <b>acompanha e cuida</b> de cada pessoa.</p>
+    <div class="pillars">
+      <div class="pillar"><b>🎞</b><span>Ensino em vídeo</span></div>
+      <div class="pillar"><b>💬</b><span>Comunidade</span></div>
+      <div class="pillar"><b>🌱</b><span>Crescimento</span></div>
+      <div class="pillar"><b>🛠</b><span>Gestão da igreja</span></div>
+    </div>
+  </div>
+
+  <h3 class="area-title"><span class="ai">🎞</span> Ensino e vídeos</h3>
+  <div class="grid">
+    <div class="feat"><div class="fi">🏠</div><h4>Tela inicial estilo Netflix</h4><p>Banner, filas por tema, Continuar assistindo, Em alta e Recomendados.</p><div class="why">O fiel encontra o conteúdo como nos apps que já usa.</div></div>
+    <div class="feat"><div class="fi">⏯</div><h4>Volta de onde parou</h4><p>Cada aula continua do ponto exato, com barra de progresso.</p><div class="why">Ninguém perde o fio do estudo.</div></div>
+    <div class="feat"><div class="fi">⏭</div><h4>Próxima aula automática</h4><p>Contagem de 5 segundos e segue para a próxima.</p><div class="why">Incentiva a terminar o curso.</div></div>
+    <div class="feat"><div class="fi">⚡</div><h4>Velocidade até 2x</h4><p>A preferência fica salva para todas as aulas.</p><div class="why">Respeita o ritmo de cada um.</div></div>
+    <div class="feat"><div class="fi">📺</div><h4>Transmitir para a TV</h4><p>Chromecast e AirPlay direto do player.</p><div class="why">Estudo em família, na sala.</div></div>
+    <div class="feat"><div class="fi">🎓</div><h4>Certificados em PDF</h4><p>Ao concluir o curso, o fiel baixa o certificado.</p><div class="why">Reconhece o esforço.</div></div>
+    <div class="feat"><div class="fi">🔎</div><h4>Busca, favoritos e histórico</h4><p>Encontrar, guardar e rever qualquer aula.</p><div class="why">Tudo à mão.</div></div>
+    <div class="feat"><div class="fi">🔥</div><h4>Selo "Em alta"</h4><p>Destaca o que a igreja mais está assistindo na semana.</p><div class="why">Gera conversa e engajamento.</div></div>
+  </div>
+
+  <h3 class="area-title"><span class="ai">💬</span> Comunidade e vida da igreja</h3>
+  <div class="grid">
+    <div class="feat"><div class="fi">🗨</div><h4>Comentários edificantes</h4><p>Votos, respostas, versículos e citação do minuto da aula.</p><div class="why">A aula vira uma conversa sobre a Palavra.</div></div>
+    <div class="feat"><div class="fi">📌</div><h4>Nota do pastor e selo Líder</h4><p>A liderança fixa orientações e aparece em destaque.</p><div class="why">Conversa guiada e saudável.</div></div>
+    <div class="feat"><div class="fi">🙏</div><h4>Mural de oração</h4><p>Pedidos com "Amém", oração atendida e aviso a quem orou.</p><div class="why">Ninguém ora sozinho.</div></div>
+    <div class="feat"><div class="fi">✍️</div><h4>Resumos da aula</h4><p>O fiel compartilha o que aprendeu e recebe votos.</p><div class="why">Quem ensina aprende duas vezes.</div></div>
+    <div class="feat"><div class="fi">📒</div><h4>Minhas notas</h4><p>Caderno pessoal ligado ao minuto do vídeo.</p><div class="why">Estudo profundo e privado.</div></div>
+    <div class="feat"><div class="fi">🌟</div><h4>Testemunhos</h4><p>Mural moderado com os mais edificantes na home.</p><div class="why">Mostra Deus agindo na igreja.</div></div>
+    <div class="feat"><div class="fi">📖</div><h4>Devocional do dia</h4><p>Escrito pelos fiéis, avaliado pelos líderes, agendado sozinho.</p><div class="why">Conteúdo diário sem sobrecarregar a equipe.</div></div>
+    <div class="feat"><div class="fi">🔴</div><h4>Cultos ao vivo</h4><p>Live com chat próprio, moderação e escolha de público.</p><div class="why">A igreja reunida, num ambiente seguro.</div></div>
+    <div class="feat"><div class="fi">🟢</div><h4>Pessoas online</h4><p>Quem está no app agora.</p><div class="why">Sensação de comunidade viva.</div></div>
+  </div>
+
+  <h3 class="area-title"><span class="ai">🌱</span> Crescimento e hábito</h3>
+  <div class="grid">
+    <div class="feat"><div class="fi">🔥</div><h4>Ofensiva e ranking</h4><p>Dias seguidos de acesso, recorde e ranking.</p><div class="why">Cria o hábito diário.</div></div>
+    <div class="feat"><div class="fi">🏅</div><h4>Medalhas</h4><p>Constância, ensino, resumos, oração e desafios, com progresso.</p><div class="why">Crescimento visível e celebrado.</div></div>
+    <div class="feat"><div class="fi">🏁</div><h4>Desafios da igreja</h4><p>"Ler 1 capítulo por dia", "2 aulas em 3 dias", com progresso automático.</p><div class="why">Campanhas da igreja dentro do app.</div></div>
+    <div class="feat"><div class="fi">⏰</div><h4>Lembrete diário</h4><p>No horário que o fiel escolher, com o devocional do dia.</p><div class="why">Um toque para voltar todo dia.</div></div>
+    <div class="feat"><div class="fi">🎯</div><h4>Recomendações personalizadas</h4><p>Pelos temas de interesse e tempo disponível.</p><div class="why">O conteúdo certo para cada pessoa.</div></div>
+  </div>
+
+  <h3 class="area-title"><span class="ai">🛠</span> Gestão para a igreja</h3>
+  <div class="grid">
+    <div class="feat"><div class="fi">✅</div><h4>Aprovação de cadastro</h4><p>Só entra quem a igreja autoriza; e-mail de aprovação ou recusa.</p><div class="why">Ambiente seguro e fechado.</div></div>
+    <div class="feat"><div class="fi">👤</div><h4>Perfil completo do fiel</h4><p>WhatsApp, aniversário, família, membro desde quando, função.</p><div class="why">Conhecer cada membro.</div></div>
+    <div class="feat"><div class="fi">🏷</div><h4>Funções e permissões</h4><p>Membro, Líder, Pastor; permissões da equipe.</p><div class="why">Cada um com seu papel.</div></div>
+    <div class="feat"><div class="fi">📚</div><h4>Cursos e vídeos</h4><p>Cadastro com capa, nível, ministrante, gratuito ou pago.</p><div class="why">A igreja publica sozinha.</div></div>
+    <div class="feat"><div class="fi">📣</div><h4>Notificações</h4><p>Mensagens para todos, grupos ou pessoas, com link.</p><div class="why">Comunicação direta no celular.</div></div>
+    <div class="feat"><div class="fi">📊</div><h4>Engajamento e progresso</h4><p>Quem está online, ofensivas e progresso de cada fiel.</p><div class="why">Cuidado pastoral com dados.</div></div>
+    <div class="feat"><div class="fi">🛡</div><h4>Moderação completa</h4><p>Testemunhos, devocionais, chat da live, resumos e pedidos.</p><div class="why">Conteúdo sempre saudável.</div></div>
+    <div class="feat"><div class="fi">💳</div><h4>Assinaturas</h4><p>Pix, boleto e cartão; individual, família e igreja; cortesia e teste grátis.</p><div class="why">Sustentabilidade do ministério.</div></div>
+  </div>
+
+  <h3 class="area-title"><span class="ai">📱</span> Tecnologia</h3>
+  <div class="grid">
+    <div class="feat"><div class="fi">📲</div><h4>App instalável</h4><p>Android, iPhone e computador, sem loja; atualiza sozinho.</p><div class="why">Sem barreira para instalar.</div></div>
+    <div class="feat"><div class="fi">🔔</div><h4>Notificações no celular</h4><p>Push e sino dentro do app.</p><div class="why">O fiel não perde nada.</div></div>
+    <div class="feat"><div class="fi">🌓</div><h4>Tema claro e escuro</h4><p>Conforto em qualquer horário.</p><div class="why">Leitura agradável.</div></div>
+    <div class="feat"><div class="fi">⚡</div><h4>Rápido e leve</h4><p>Cache e compressão para abrir rápido, mesmo no 4G.</p><div class="why">Funciona bem em qualquer celular.</div></div>
+  </div>
+
+  <h3 class="area-title"><span class="ai">🚀</span> Próximos passos possíveis</h3>
+  <div class="grid">
+    <div class="feat soon"><div class="fi">📖</div><h4>Bíblia integrada</h4><p>Várias versões e planos de leitura.</p><div class="why">Depende das versões escolhidas.</div></div>
+    <div class="feat soon"><div class="fi">📚</div><h4>Biblioteca de livros</h4><p>Leitor no app e acesso por plano.</p><div class="why">Depende dos direitos dos livros.</div></div>
+    <div class="feat soon"><div class="fi">🌍</div><h4>Missões</h4><p>Projetos com meta e contribuição via Pix/cartão.</p><div class="why">Depende dos projetos.</div></div>
+    <div class="feat soon"><div class="fi">💬</div><h4>Devocional no WhatsApp</h4><p>Envio diário para quem quiser receber.</p><div class="why">Depende da aprovação do custo.</div></div>
+    <div class="feat soon"><div class="fi">🔤</div><h4>Legenda automática</h4><p>Transcrição dos vídeos por IA.</p><div class="why">Depende da aprovação do custo.</div></div>
+    <div class="feat soon"><div class="fi">🪙</div><h4>Moeda interna</h4><p>Pontos trocados por descontos e acessos.</p><div class="why">Depende das regras.</div></div>
+    <div class="feat soon"><div class="fi">⛪</div><h4>Igreja e célula no perfil</h4><p>Vínculo, tempo de fé e títulos.</p><div class="why">Depende do modelo por igreja.</div></div>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  function store(get, key, val) {
+    try { return get ? localStorage.getItem(key) : localStorage.setItem(key, val); } catch (e) { return null; }
+  }
+
+  /* ---- Tema ---- */
+  var root = document.documentElement;
+  var savedTheme = store(true, 'mananci-guia-tema');
+  if (savedTheme) root.setAttribute('data-theme', savedTheme);
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var cur = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    store(false, 'mananci-guia-tema', next);
+  });
+
+  /* ---- Abas ---- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function showTab(name, anchor) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === name ? 'true' : 'false'); });
+    document.querySelectorAll('.panel').forEach(function (p) { p.classList.toggle('on', p.id === 'p-' + name); });
+    store(false, 'mananci-guia-aba', name);
+    if (anchor) {
+      var el = document.querySelector(anchor);
+      if (el) setTimeout(function () { el.scrollIntoView({ behavior: 'smooth' }); }, 30);
+    } else {
+      window.scrollTo({ top: document.querySelector('.tabs-wrap').offsetTop - 10, behavior: 'smooth' });
+    }
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { showTab(t.dataset.tab); }); });
+  document.querySelectorAll('[data-goto]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var href = a.getAttribute('href');
+      showTab(a.dataset.goto, href && href !== '#' ? href : null);
+    });
+  });
+  var savedTab = store(true, 'mananci-guia-aba');
+  if (savedTab && document.getElementById('p-' + savedTab)) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === savedTab ? 'true' : 'false'); });
+    document.querySelectorAll('.panel').forEach(function (p) { p.classList.toggle('on', p.id === 'p-' + savedTab); });
+  }
+
+  /* ---- Checklist ---- */
+  var KEY = 'mananci-guia-demo';
+  var state = {};
+  try { state = JSON.parse(store(true, KEY) || '{}') || {}; } catch (e) { state = {}; }
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('summary input[type=checkbox]'));
+  function update() {
+    var done = 0;
+    boxes.forEach(function (b) {
+      b.closest('details').classList.toggle('done', b.checked);
+      if (b.checked) done++;
+    });
+    document.getElementById('prog').style.width = (boxes.length ? done / boxes.length * 100 : 0) + '%';
+    document.getElementById('progTxt').textContent = done + ' de ' + boxes.length + ' mostrados';
+    document.querySelectorAll('#toc a').forEach(function (a) {
+      var sec = document.querySelector(a.getAttribute('href'));
+      var cnt = a.querySelector('.cnt');
+      if (!sec || !cnt) return;
+      var all = sec.querySelectorAll('summary input[type=checkbox]');
+      var ok = sec.querySelectorAll('summary input[type=checkbox]:checked').length;
+      cnt.textContent = ok + '/' + all.length;
+      a.classList.toggle('complete', all.length > 0 && ok === all.length);
+    });
+  }
+  boxes.forEach(function (b) {
+    b.checked = !!state[b.dataset.k];
+    b.closest('label').addEventListener('click', function (e) { e.stopPropagation(); });
+    b.addEventListener('change', function () {
+      state[b.dataset.k] = b.checked;
+      store(false, KEY, JSON.stringify(state));
+      update();
+    });
+  });
+  update();
+
+  var expandBtn = document.getElementById('expand');
+  expandBtn.addEventListener('click', function () {
+    var open = expandBtn.textContent === 'Abrir tudo';
+    document.querySelectorAll('#p-roteiro details').forEach(function (d) { d.open = open; });
+    expandBtn.textContent = open ? 'Fechar tudo' : 'Abrir tudo';
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    if (!confirm('Limpar todas as marcações?')) return;
+    state = {};
+    store(false, KEY, '{}');
+    boxes.forEach(function (b) { b.checked = false; });
+    update();
+  });
+
+  /* ---- PDF: contadores e filtros ---- */
+  var items = Array.prototype.slice.call(document.querySelectorAll('.pdf-item'));
+  ['ok', 'part', 'wait', 'no'].forEach(function (s) {
+    document.getElementById('st-' + s).textContent = items.filter(function (i) { return i.dataset.s === s; }).length;
+  });
+  var filters = Array.prototype.slice.call(document.querySelectorAll('.filter'));
+  filters.forEach(function (f) {
+    f.addEventListener('click', function () {
+      filters.forEach(function (x) { x.setAttribute('aria-pressed', x === f ? 'true' : 'false'); });
+      items.forEach(function (i) {
+        i.style.display = (f.dataset.f === 'all' || i.dataset.s === f.dataset.f) ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+/* Estilos do widget de transmissão ao vivo (vídeo + chat), compartilhado
+   entre a página pública (ao-vivo.php) e a versão dentro da área do fiel
+   (php/fiel/ao_vivo.php) — ver php/includes/transmissao_widget.php.
+
+   Cada var() tem um fallback pra funcionar em qualquer página que inclua
+   esse widget, mesmo que ela não defina --card-bg/--border-color/etc.
+   (a página pública já define essas variáveis pro tema claro/escuro e
+   continua usando os valores dela normalmente; o fallback só entra em
+   ação em páginas que não as declaram). */
+
+.estado-vazio {
+    text-align: center;
+    padding: 2.5rem 2rem 3rem;
+    margin-bottom: 2rem;
+    background: var(--card-bg, rgba(17, 24, 39, 0.78));
+    border: 1px solid var(--border-color, rgba(255,255,255,0.12));
+    border-radius: 24px;
+}
+
+/* Tema escuro: o --card-bg (#475569) é um cinza claro que destoa dos
+   outros cards do app e apaga o texto. Usa o mesmo azul-marinho dos
+   demais cards, com um brilho vermelho bem leve no topo (cor do "ao vivo"). */
+:root:not([data-theme="light"]) .estado-vazio {
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(251, 113, 133, 0.10), transparent 60%),
+        linear-gradient(180deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.85));
+    border-color: rgba(96, 165, 250, 0.16);
+    box-shadow: 0 16px 40px rgba(2, 6, 23, 0.35);
+}
+:root:not([data-theme="light"]) .comentarios-card {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.85));
+    border-color: rgba(96, 165, 250, 0.16);
+}
+
+.estado-vazio .icone-vazio {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 1.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(251, 113, 133, 0.12);
+    color: #fb7185;
+    font-size: 1.8rem;
+}
+
+.estado-vazio h2 {
+    font-size: 1.4rem;
+    color: var(--text-main, #f8fafc);
+    margin-bottom: 0.6rem;
+}
+
+.estado-vazio p {
+    color: var(--text-muted, #94a3b8);
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.estado-vazio .aviso-notificacao {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    background: rgba(96,165,250,0.14);
+    border: 1px solid rgba(96,165,250,0.24);
+    color: var(--primary, #60a5fa);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.transmissao-shell { margin-bottom: 2rem; }
+
+/* Vídeo + chat lado a lado (estilo live do YouTube) em telas largas — o
+   chat ocupa uma coluna lateral de largura fixa, esticada pra mesma
+   altura do vídeo (que por sua vez é definida pelo próprio vídeo, via o
+   truque de padding-top logo abaixo), e rola por dentro. Assim dá pra
+   acompanhar o chat sem perder o vídeo de vista. Em telas estreitas
+   (@media no fim do arquivo) volta a empilhar, vídeo em cima e chat
+   embaixo, do jeito que já funcionava antes. */
+.transmissao-corpo {
+    display: flex;
+    align-items: stretch;
+    gap: 1.2rem;
+}
+
+.player-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--border-color, rgba(255,255,255,0.12));
+    flex: 1 1 0%;
+    min-width: 0;
+}
+.player-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.transmissao-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+}
+
+.transmissao-topo h2 { font-size: 1.3rem; margin: 0; color: var(--text-main, #f8fafc); }
+
+.badge-ao-vivo, .badge-replay {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.badge-ao-vivo { background: rgba(251,113,133,0.15); color: #fb7185; }
+.badge-replay { background: rgba(96,165,250,0.15); color: var(--primary, #60a5fa); }
+
+.live-dot {
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #fb7185;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.live-dot::before {
+    /* content: none (em vez de '') não gera o pseudo-elemento nenhum — o
+       ponto fica com cor fixa, sem anel pulsando, até
+       js/live-indicator.js confirmar que tem transmissão AO_VIVO agora e
+       adicionar a classe abaixo. */
+    content: none;
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: rgba(251,113,133,0.35);
+    animation: live-pulse 1.6s ease-out infinite;
+}
+
+.live-dot.is-ao-vivo::before {
+    content: '';
+}
+
+@keyframes live-pulse {
+    0% { transform: scale(0.6); opacity: 0.9; }
+    100% { transform: scale(2.4); opacity: 0; }
+}
+
+.comentarios-card {
+    background: var(--card-bg, rgba(17, 24, 39, 0.78));
+    border: 1px solid var(--border-color, rgba(255,255,255,0.12));
+    border-radius: 20px;
+    padding: 1.4rem;
+    flex: 0 0 320px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.comentarios-card h3 { font-size: 1.05rem; margin-bottom: 1rem; color: var(--text-main, #f8fafc); flex-shrink: 0; }
+
+#lista-comentarios {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    margin-bottom: 1.1rem;
+    padding-right: 0.3rem;
+}
+
+.comentario-item {
+    padding: 0.6rem 0.8rem;
+    border-radius: 12px;
+    background: var(--surface-strong, rgba(255,255,255,0.06));
+}
+.comentario-item strong { color: var(--text-main, #f8fafc); }
+.comentario-hora { color: var(--text-muted, #94a3b8); font-size: 0.75rem; margin-left: 0.5rem; }
+.comentario-texto { color: var(--text-main, #f8fafc); margin-top: 0.15rem; word-break: break-word; }
+
+.sem-comentarios { color: var(--text-muted, #94a3b8); font-size: 0.9rem; }
+
+.form-comentario { display: flex; gap: 0.6rem; flex-wrap: wrap; flex-shrink: 0; }
+.form-comentario textarea {
+    flex: 1 1 260px;
+    resize: none;
+    min-height: 46px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 14px;
+    border: 1px solid var(--border-color, rgba(255,255,255,0.12));
+    background: var(--surface, rgba(17, 24, 39, 0.9));
+    color: var(--text-main, #f8fafc);
+    font-family: inherit;
+}
+.form-comentario button {
+    border: none;
+    border-radius: 14px;
+    padding: 0 1.3rem;
+    background: linear-gradient(135deg, var(--primary, #60a5fa), var(--secondary, #a78bfa));
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+.form-comentario button:disabled { opacity: 0.6; cursor: not-allowed; }
+.form-comentario.is-bloqueado textarea { opacity: 0.5; cursor: not-allowed; }
+
+/* Aviso pro fiel bloqueado pela moderação (ver transmissao_widget.php) */
+.chat-bloqueado {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 14px;
+    border: 1px solid rgba(244, 63, 94, 0.45);
+    background: rgba(244, 63, 94, 0.12);
+    color: #fda4af;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.chat-bloqueado[hidden] { display: none; }
+:root[data-theme="light"] .chat-bloqueado { color: #be123c; }
+.chat-bloqueado i { margin-top: 0.15rem; }
+
+.login-para-comentar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 14px;
+    background: var(--surface-strong, rgba(255,255,255,0.06));
+    color: var(--text-muted, #94a3b8);
+    flex-shrink: 0;
+}
+
+.login-para-comentar .btn-entrar {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary, #60a5fa), var(--secondary, #a78bfa));
+}
+
+.comentario-erro { color: #fb7185; font-size: 0.85rem; margin-top: 0.4rem; min-height: 1.1em; }
+
+/* Abaixo de 900px não sobra largura decente pro chat lateral (fica
+   espremido do lado do vídeo) — volta a empilhar, vídeo em cima e chat
+   embaixo, com o chat de volta a uma altura fixa que rola por dentro. */
+@media (max-width: 900px) {
+    .transmissao-corpo {
+        flex-direction: column;
+    }
+
+    .comentarios-card {
+        flex: 1 1 auto;
+    }
+
+    #lista-comentarios {
+        flex: none;
+        max-height: 360px;
+    }
+}
+
+/* Horários dos cultos na tela sem live (Admin → Identidade da igreja). */
+.estado-vazio .horarios-cultos {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 1rem;
+    display: grid;
+    gap: 0.35rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-main);
+}

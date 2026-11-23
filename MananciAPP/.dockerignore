@@ -1,0 +1,29 @@
+.git
+.gitignore
+agents/
+docs/
+DEPLOY_RENDER.md
+database/
+tests/
+*.sql
+.env
+.env.*
+!.env.example
+videos/
+node_modules/
+.vscode/
+.idea/
+.claude/
+
+# Documentacao/infra interna: nao tem motivo pra ficar dentro do container
+# (nada no app depende desses arquivos em runtime), e servidos como arquivo
+# estatico eles vazariam detalhes internos — o README.md em especial, que
+# documenta as credenciais de login usadas pela igreja. Sem eles na imagem,
+# nao tem como o Apache servir esse conteudo por HTTP, nao importa a
+# config do .htaccess.
+README.md
+SETUP.md
+AGENTS.md
+Dockerfile
+.dockerignore
+render.yaml

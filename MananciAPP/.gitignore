@@ -1,0 +1,36 @@
+# Sistema e IDE
+/.vscode/
+/.idea/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# Estado local de ferramentas de IA (não deve ser versionado)
+/.claude/
+
+# Dependências
+/node_modules/
+/vendor/
+
+# Build
+/dist/
+
+# Arquivos de mídia grandes
+/videos/
+
+# Dados sensíveis ou backups
+/*.sql
+
+# Sistema Windows
+Thumbs.db
+
+# Testes de navegador (tests/e2e): dependências e relatórios gerados
+/tests/e2e/node_modules/
+/tests/e2e/playwright-report/
+/tests/e2e/test-results/
+
+# Teste de carga: contas de teste com senha (tests/carga/README.md)
+contas.csv
+/tests/carga/*.csv

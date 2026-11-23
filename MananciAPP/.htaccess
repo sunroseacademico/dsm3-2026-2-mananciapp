@@ -1,0 +1,187 @@
+# Universal-ish Apache/PHP overrides for local environments (XAMPP/LAMP).
+# php_value only works with mod_php, so keep it inside IfModule blocks.
+#
+# Limites pequenos de propósito (antes: 512M de upload, 1G de memória, 15 min
+# de execução, valendo até nas páginas públicas): os vídeos vão direto do
+# navegador para o R2 e nunca passam pelo PHP, e a maior imagem aceita tem
+# 5 MB (IMAGEM_UPLOAD_MAX_BYTES). Com os valores antigos, alguns POSTs
+# anônimos gigantes enchiam o disco e prendiam o servidor por minutos — e o
+# container do Render tem 512 MB de RAM. Quem precisar de mais tempo (o
+# lembrete diário) chama set_time_limit() no próprio arquivo.
+
+# "/" abre o index.php (o index.html com a imagem da prévia do link
+# preenchida). O index.html continua abrindo direto pelo próprio nome.
+DirectoryIndex index.php index.html
+
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 8M
+    php_value post_max_size 12M
+    php_value memory_limit 256M
+    php_value max_execution_time 60
+    php_value max_input_time 60
+</IfModule>
+
+<IfModule mod_php.c>
+    php_value upload_max_filesize 8M
+    php_value post_max_size 12M
+    php_value memory_limit 256M
+    php_value max_execution_time 60
+    php_value max_input_time 60
+</IfModule>
+
+# OBS: "RequestReadTimeout" (mod_reqtimeout) NÃO pode ficar aqui — é uma
+# diretiva só de configuração de servidor, o Apache sempre recusa (erro 500)
+# se ela aparecer dentro de um .htaccess, mesmo com AllowOverride All e
+# mesmo dentro de <IfModule>. No XAMPP local isso passava batido só porque
+# o módulo reqtimeout não vem carregado por padrão lá (o IfModule nunca era
+# avaliado); no Debian do Docker/Render ele vem ativo, e o site quebrava
+# inteiro com 500 em toda página. Quem cuida disso agora é o Dockerfile,
+# direto na configuração do Apache (contexto onde é permitido).
+
+# Bloqueia acesso direto (por URL) a arquivos que não deveriam ser baixáveis:
+# documentação interna, scripts de infra, config, banco. O .dockerignore já
+# impede a maioria deles de ir pra imagem, mas isso aqui é uma segunda
+# camada — protege mesmo que algum desses arquivos volte a ser copiado por
+# engano no futuro (ex.: alguém remove uma linha do .dockerignore sem notar
+# que ela também barrava acesso via URL).
+<IfModule mod_authz_core.c>
+    <FilesMatch "(?i)\.(md|sql|ya?ml|log|sh|ini|env)$|^(Dockerfile|\.env.*|\.dockerignore|\.gitignore)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "(?i)\.(md|sql|ya?ml|log|sh|ini|env)$|^(Dockerfile|\.env.*|\.dockerignore|\.gitignore)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# Arquivos PHP que só existem pra ser incluídos por outras páginas (conexão,
+# layout do admin) — abertos direto pela URL não têm função nenhuma (o
+# antigo header_admin.php chegava a devolver o menu do admin sem login). As
+# pastas php/includes/ e php/fiel/includes/ têm o próprio .htaccess.
+<IfModule mod_authz_core.c>
+    <FilesMatch "^(conexao|admin_layout|sessao_banco)\.php$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "^(conexao|admin_layout|sessao_banco)\.php$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# Headers de seguranca do navegador — nenhum deles quebra nada do app hoje
+# (nao ha frame/iframe proprio, nao ha uso de geolocalizacao/camera/
+# microfone).
+<IfModule mod_headers.c>
+    # Impede a pagina de ser carregada dentro de <iframe> de outro site
+    # (clickjacking — ex.: um site malicioso sobrepondo botoes invisiveis
+    # por cima do painel admin pra fazer o admin clicar sem perceber).
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # Impede o navegador de "adivinhar" o tipo de um arquivo servido com
+    # Content-Type errado e executa-lo como script/HTML.
+    Header always set X-Content-Type-Options "nosniff"
+    # So manda a origem (nao a URL completa, com querystring/paths) como
+    # Referer pra sites de fora — evita vazar token/id em URL pra terceiros
+    # via link externo.
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Desliga recursos do navegador que o app nao usa — reduz superficie de
+    # ataque caso um XSS futuro tente abusar de camera/microfone/localizacao.
+    Header always set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+    # Forca HTTPS por 1 ano (o site so roda em HTTPS mesmo, via Render) —
+    # evita que um visitante digitando "http://" sem querer caia numa
+    # conexao insegura antes do primeiro redirect.
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Content-Security-Policy. As páginas PHP mandam a própria CSP, com nonce
+    # nos scripts e sem 'unsafe-inline' em script-src (site_csp_politica() em
+    # php/conexao.php). Esta aqui é só o padrão para o que não passa pelo PHP
+    # (arquivos estáticos e o index.html, que tem script inline): por isso
+    # "setifempty" sem "always" — só entra se a resposta ainda não tiver uma
+    # CSP (a do PHP fica na mesma tabela de cabeçalhos). Mudou algum domínio?
+    # Mudar nos dois lugares. Ela já fecha origem
+    # externa desconhecida (um XSS que tentasse carregar um script de outro
+    # dominio, ou embutir a pagina admin num iframe de outro site, ja seria
+    # bloqueado), form-action e frame-ancestors.
+    #
+    # Dominios liberados, um por um (levantado com grep em todo o código):
+    # - cdn.jsdelivr.net / cdnjs.cloudflare.com: Bootstrap e Font Awesome.
+    # - cdn.onesignal.com + onesignal.com + *.onesignal.com: SDK e API de
+    #   push. Precisou entrar em script-src (não só connect-src) porque o
+    #   SDK deles faz uma chamada JSONP (script injetado com ?callback=)
+    #   pra api.onesignal.com em alguns fluxos — sem isso no allowlist, o
+    #   navegador bloqueava e a inscrição/push nunca completava de verdade
+    #   (confirmado: o item ficava vermelho no Network e nenhum push
+    #   chegava, nem no primeiro acesso). Depois disso, faltou liberar o
+    #   mesmo domínio em style-src também: o SDK carrega um CSS próprio
+    #   (OneSignalSDK.page.styles.css) direto de onesignal.com pra estilizar
+    #   o convite/sininho de notificação — bloqueado do mesmo jeito até
+    #   entrar no allowlist de estilos.
+    # - *.r2.cloudflarestorage.com: vídeos no Cloudflare R2 (URL pré-assinada
+    #   pra tocar em media-src e PUT do upload direto do navegador em
+    #   connect-src). Ver seção 5 de DEPLOY_RENDER.md. O *.supabase.co saiu
+    #   em out/2026, quando os vídeos deixaram o Supabase Storage (o banco
+    #   continua lá, mas é acessado só pelo PHP, nunca pelo navegador).
+    # - formspree.io: só em form-action, porque php/fiel/contato.php envia o
+    #   formulário de contato direto pra lá (não é uma origem de script).
+    # - *.asaas.com: também só em form-action — php/fiel/assinar.php
+    #   responde o POST com um redirect pra página de pagamento do Asaas
+    #   (sandbox.asaas.com / www.asaas.com), e o Chrome aplica form-action
+    #   ao destino do redirect de um formulário.
+    # - www.youtube.com / www.youtube-nocookie.com: embed do player da
+    #   transmissão ao vivo (ao-vivo.php) — sem isso em frame-src, o
+    #   navegador bloqueia o <iframe> do YouTube silenciosamente (nenhum
+    #   erro visível na tela, só no Console/Network).
+    # - blob: em media-src: o admin lê a duração do vídeo escolhido (arquivo
+    #   local, via URL.createObjectURL) antes de enviar ao R2.
+    Header setifempty Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/ https://cdn.onesignal.com https://onesignal.com https://*.onesignal.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.onesignal.com https://onesignal.com https://*.onesignal.com; font-src 'self' https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; media-src 'self' blob: https://*.r2.cloudflarestorage.com; connect-src 'self' https://bible-api.com https://*.r2.cloudflarestorage.com https://*.onesignal.com https://onesignal.com https://challenges.cloudflare.com; frame-src https://*.onesignal.com https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self' https://formspree.io https://*.asaas.com"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Desempenho: compressão e cache do navegador
+# ---------------------------------------------------------------------------
+# Compressão gzip das respostas de texto (HTML gerado pelo PHP, CSS, JS,
+# JSON dos AJAX). O styles.css, por exemplo, cai de ~140 KB pra ~25 KB.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json application/manifest+json image/svg+xml
+</IfModule>
+
+# Sem ETag nos arquivos estáticos: com a compressão ligada o Apache muda o
+# ETag (sufixo "-gzip") e a revalidação nunca bate, baixando o arquivo
+# inteiro de novo. Sem ele o navegador revalida pela data (Last-Modified),
+# que funciona e devolve "304 Not Modified" sem corpo.
+<FilesMatch "(?i)\.(css|js|png|jpe?g|gif|webp|svg|ico|woff2?|ttf|json)$">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header unset ETag
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    # Imagens, ícones e fontes quase nunca mudam: o navegador guarda por 7
+    # dias sem nem perguntar ao servidor. Se trocar uma imagem mantendo o
+    # mesmo nome, quem já tinha visto pode ver a antiga por até 7 dias —
+    # nesse caso, salve com outro nome.
+    <FilesMatch "(?i)\.(png|jpe?g|gif|webp|svg|ico|woff2?|ttf)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+    # CSS e JS: o navegador guarda, mas confere a cada página se mudou
+    # (resposta 304 pequena quando não mudou). Assim um deploy novo chega na
+    # hora, sem misturar CSS/JS antigo com PHP novo.
+    <FilesMatch "(?i)\.(css|js)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+    # Com "?v=<versão>" (site_versao_estatico(), em php/conexao.php) o endereço
+    # muda a cada deploy: aí o navegador guarda por 1 ano sem perguntar de
+    # novo. <If> é aplicado depois do <FilesMatch>, então vale este.
+    <If "%{QUERY_STRING} =~ /(^|&)v=/ && %{REQUEST_URI} =~ /\.(css|js)$/">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </If>
+    # O sw.js e o manifest nunca podem ficar presos em cache: é por eles que
+    # o navegador descobre que existe versão nova do app.
+    <FilesMatch "^(sw\.js|manifest\.json)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>

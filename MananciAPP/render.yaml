@@ -1,0 +1,99 @@
+# Blueprint opcional do Render (Infrastructure as Code).
+# Se preferir, configure o serviço manualmente pelo dashboard (New + > Web Service,
+# runtime "Docker") e cadastre as mesmas variáveis de ambiente listadas em .env.example.
+services:
+  - type: web
+    name: mananciapp
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASS
+        sync: false
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: EMAIL_API_KEY
+        sync: false
+      - key: EMAIL_SENDER_EMAIL
+        sync: false
+      - key: EMAIL_SENDER_NAME
+        value: "Missão Manancial"
+      # SITE_URL_PUBLICA e ASAAS_API_URL mudam por ambiente: valores fixos
+      # aqui levavam a produção para os links da homologação e para o Asaas
+      # sandbox (que aceita cartão de teste e libera acesso sem dinheiro de
+      # verdade). Agora cada serviço preenche os seus no painel do Render:
+      #   homologação: https://mananciapp-render-homolog.onrender.com/  e
+      #                https://api-sandbox.asaas.com/v3
+      #   produção:    o domínio de produção  e  https://api.asaas.com/v3
+      # Sem elas, o app usa os valores da homologação e avisa no log.
+      - key: SITE_URL_PUBLICA
+        sync: false
+      - key: ASAAS_API_URL
+        sync: false
+      - key: ASAAS_API_KEY
+        sync: false
+      - key: ASAAS_WEBHOOK_TOKEN
+        sync: false
+      - key: ASSINATURA_TOLERANCIA_DIAS
+        value: "5"
+      # Push (OneSignal). A REST API Key e o segredo do external_id ficam só
+      # no servidor (ver .env.example).
+      - key: ONESIGNAL_APP_ID
+        sync: false
+      - key: ONESIGNAL_REST_API_KEY
+        sync: false
+      - key: ONESIGNAL_EXTERNAL_ID_SEGREDO
+        sync: false
+      # Página de contato (php/fiel/contato.php). Linha vazia não aparece.
+      - key: CONTATO_EMAIL
+        sync: false
+      - key: CONTATO_TELEFONE
+        sync: false
+      - key: CONTATO_ENDERECO
+        sync: false
+      - key: CONTATO_FORMSPREE_URL
+        sync: false
+      # Lembrete diário (lembrete_diario.php): sem a chave, o endpoint
+      # responde 503 e nenhum lembrete sai.
+      - key: LEMBRETE_CRON_CHAVE
+        sync: false
+      # Cifra a chave do 2FA no banco (ver .env.example). Não trocar depois.
+      - key: APP_CHAVE
+        sync: false
+      - key: SENHA_CHECAR_VAZADAS
+        value: "1"
+      # Sessões no banco (seção 70 do bancosupabase.md): só ligue (1) depois
+      # de rodar o SQL. Com 0, ficam em arquivo no container, como antes.
+      - key: SESSOES_NO_BANCO
+        value: "0"
+      - key: CSP_SO_AVISAR
+        value: "0"
+      # Alerta de erros no Sentry (php/conexao.php). Vazia: desligado.
+      - key: SENTRY_DSN
+        sync: false
+      # CAPTCHA invisível no cadastro e no "Esqueci minha senha" (Turnstile).
+      - key: TURNSTILE_SITE_KEY
+        sync: false
+      - key: TURNSTILE_SECRET_KEY
+        sync: false
+      # Processos do Apache (docker/entrypoint.sh). Subir junto com o plano:
+      # Standard (2 GB) → 40. Ver .env.example.
+      - key: APACHE_MAX_WORKERS
+        value: "20"
+    # O Render chama este endereço para saber se o container está de pé
+    # (antes do deploy entrar no ar e depois, de tempos em tempos).
+    healthCheckPath: /saude.php

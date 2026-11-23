@@ -1,0 +1,11 @@
+{
+  "name": "mananciapp-e2e",
+  "private": true,
+  "description": "Testes de ponta a ponta (Playwright) do MananciAPP. Ver README.md desta pasta.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.2"
+  }
+}

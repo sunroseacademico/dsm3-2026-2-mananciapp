@@ -1,0 +1,308 @@
+/* ==========================================
+   LAYOUT PADRÃO DO PAINEL ADMIN
+   Sidebar fixa (recolhível) + header com título da tela, notificações
+   e tema. Usado junto com php/admin/admin_layout.php e js/admin.js.
+   ========================================== */
+
+body.admin-shell {
+    --admin-sidebar-width: 280px;
+    display: flex;
+    min-height: 100vh;
+    padding-top: 0 !important;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Sidebar */
+body.admin-shell .admin-sidebar {
+    width: var(--admin-sidebar-width);
+    background: linear-gradient(135deg, #1a2a4e 0%, #0f1b35 100%);
+    border-right: 1px solid rgba(96, 165, 250, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding-top: 2rem;
+    z-index: 1300;
+    transition: transform 0.25s ease;
+}
+
+body.admin-shell .admin-sidebar::-webkit-scrollbar { width: 8px; }
+body.admin-shell .admin-sidebar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+body.admin-shell .admin-sidebar::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+
+body.admin-shell .sidebar-header {
+    padding: 0 1.5rem 2rem;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.2);
+    margin-bottom: 1.5rem;
+}
+
+body.admin-shell .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+}
+
+body.admin-shell .sidebar-logo img { height: 40px; width: auto; }
+
+body.admin-shell .sidebar-logo h5 {
+    margin: 0;
+    font-weight: 800;
+    color: var(--primary-light);
+    font-size: 1.1rem;
+}
+
+body.admin-shell .sidebar-logo small {
+    color: var(--text-muted);
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+body.admin-shell .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body.admin-shell .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1rem 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin: 0.25rem 0.75rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+body.admin-shell .sidebar-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+/* Alinha o pontinho "Ao Vivo" (que substitui o ícone <i> só nesse item do
+   menu) na mesma coluna de 20px dos outros ícones — o wrapper centraliza,
+   sem mexer no tamanho/formato do .live-dot em si (9x9, redondo). */
+body.admin-shell .sidebar-link .live-dot-col {
+    width: 20px;
+    display: inline-flex;
+    justify-content: center;
+}
+
+/* O "empurrãozinho" do hover é feito com transform, não com padding: mexer no
+   padding encolhia o espaço do texto e quebrava rótulos longos (ex.:
+   "Destaques da home") em duas linhas. */
+body.admin-shell .sidebar-link > i,
+body.admin-shell .sidebar-link > span:not(.badge) { transition: transform 0.3s ease; }
+
+body.admin-shell .sidebar-link:hover {
+    color: var(--text-main);
+    background: rgba(96, 165, 250, 0.1);
+}
+
+body.admin-shell .sidebar-link:hover > i,
+body.admin-shell .sidebar-link:hover > span:not(.badge) { transform: translateX(8px); }
+
+body.admin-shell .sidebar-link.active {
+    color: var(--primary-light);
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), transparent);
+    border-left: 3px solid var(--primary-light);
+    padding-left: calc(1.5rem - 3px);
+}
+
+body.admin-shell .sidebar-link .badge {
+    position: absolute;
+    right: 1rem;
+}
+
+body.admin-shell .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.6);
+    z-index: 1250;
+}
+
+/* Área principal */
+body.admin-shell .admin-main {
+    margin-left: var(--admin-sidebar-width);
+    flex: 1;
+    min-width: 0;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.25s ease;
+}
+
+body.admin-shell .admin-header {
+    position: sticky;
+    top: 0;
+    z-index: 1200;
+    height: auto;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.2);
+    padding: 1.25rem 1.5rem;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    animation: fadeInDown 0.5s ease-out;
+}
+
+body.admin-shell .admin-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+body.admin-shell .admin-header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+body.admin-shell .admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+body.admin-shell .sidebar-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 10px;
+    background: rgba(96, 165, 250, 0.12);
+    color: var(--primary-light);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+body.admin-shell .sidebar-toggle-btn:hover { background: rgba(96, 165, 250, 0.22); }
+
+body.admin-shell .admin-content {
+    flex: 1;
+    padding: 2rem 1.5rem;
+    /* "backwards" (e não "both"): se o transform da animação ficasse aplicado
+       depois que ela termina, .admin-content viraria containing block dos
+       .modal (position: fixed) — o modal ficava preso embaixo do backdrop
+       do Bootstrap e a tela travava ao clicar em "Rejeitar"/"Aprovar". */
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
+}
+
+/* Cartão padrão de conteúdo das telas internas (formulários, tabelas) */
+body.admin-shell .admin-card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+}
+
+body.admin-shell .admin-card-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+:root[data-theme="light"] body.admin-shell .admin-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border-color);
+}
+
+/* Avisos amarelos (.alert-warning): styles.css força texto claro em todo
+   .alert do admin, o que sumia no fundo amarelo-claro do Bootstrap. */
+body.admin-layout .alert.alert-warning {
+    background: rgba(245, 158, 11, 0.14) !important;
+    border: 1px solid rgba(245, 158, 11, 0.45) !important;
+    color: #fde68a !important;
+}
+:root[data-theme="light"] body.admin-layout .alert.alert-warning {
+    background: #fffbeb !important;
+    border-color: #fcd34d !important;
+    color: #78350f !important;
+}
+
+/* Sidebar recolhida (desktop) — estado salvo no navegador pelo js/admin.js */
+body.admin-shell.sidebar-collapsed .admin-sidebar { transform: translateX(-100%); }
+body.admin-shell.sidebar-collapsed .admin-main { margin-left: 0; }
+
+/* Evita animar o recolhimento no carregamento da página */
+body.admin-shell.sidebar-no-anim .admin-sidebar,
+body.admin-shell.sidebar-no-anim .admin-main { transition: none !important; }
+
+/* Mobile: sidebar vira gaveta sobreposta, fechada por padrão */
+@media (max-width: 768px) {
+    body.admin-shell { --admin-sidebar-width: 260px; }
+
+    body.admin-shell .admin-sidebar { transform: translateX(-100%); }
+    body.admin-shell .admin-main { margin-left: 0; }
+
+    body.admin-shell.sidebar-open .admin-sidebar { transform: translateX(0); }
+    body.admin-shell.sidebar-open .sidebar-backdrop { display: block; }
+
+    body.admin-shell .admin-header { padding: 1rem; }
+    body.admin-shell .admin-header h1 { font-size: 1.35rem; }
+    body.admin-shell .admin-content { padding: 1rem; }
+    body.admin-shell .admin-card { padding: 1.25rem; }
+}
+
+/* Grupos de permissões (php/admin/admin_gerenciar_permissoes.php) */
+.permissoes-grupo { padding: 0.9rem 1rem; border: 1px solid var(--border-color); border-radius: 12px; }
+.permissoes-form-grupo { padding-top: 1rem; border-top: 1px dashed var(--border-color); }
+.permissoes-telas { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.35rem 1rem; }
+
+/* Tipos de fiel (php/admin/admin_tipos_fiel.php) */
+.tipos-fiel-permissoes { list-style: none; padding: 0; margin: 0.6rem 0 0; display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.85rem; }
+.tipos-fiel-permissoes .is-sim i { color: #10b981; }
+.tipos-fiel-permissoes .is-nao { color: var(--text-muted); }
+.tipos-fiel-permissoes .is-nao i { color: #ef4444; }
+
+/* Financeiro (php/admin/admin_financeiro.php) */
+.financeiro-periodo { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.financeiro-periodo input.form-control { width: auto; }
+.financeiro-periodo-texto { font-weight: 700; color: var(--text-main); }
+.financeiro-divisao { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem; }
+.financeiro-divisao small { display: block; color: var(--text-muted); }
+.financeiro-divisao strong { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+.financeiro-barra { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin-bottom: 1rem; background: rgba(148, 163, 184, 0.25); }
+.financeiro-barra .is-equipe { background: #3b82f6; }
+.financeiro-barra .is-igreja { background: #10b981; }
+.financeiro-saldo { display: flex; flex-direction: column; gap: 0.5rem; }
+.financeiro-saldo > div { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 0.4rem; border-bottom: 1px dashed var(--border-color); }
+.financeiro-saldo dt { font-weight: 400; color: var(--text-muted); }
+.financeiro-saldo dd { margin: 0; font-weight: 700; color: var(--text-main); text-align: right; }
+.financeiro-saldo .is-destaque dt, .financeiro-saldo .is-destaque dd { font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+
+/* Missões e Contribuições: "O que o fiel vê" (php/admin/includes/missao_projeto_form.php) */
+.admin-exibicao { padding: 0.9rem 1rem; border: 1px solid var(--border-color); border-radius: 12px; }
+.admin-exibicao legend { float: none; width: auto; font-size: 0.95rem; }
+.admin-exibicao .form-check + .form-check { margin-top: 0.35rem; }
+
+/* Totais da lista de contribuições (php/admin/includes/contribuicoes_lista.php) */
+.admin-contrib-resumo { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
+.admin-contrib-resumo > div { padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 10px; }
+.admin-contrib-resumo strong { display: block; font-size: 1.1rem; color: var(--text-main); }
+.admin-contrib-resumo small { color: var(--text-muted); }

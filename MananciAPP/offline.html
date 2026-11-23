@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Missão Manancial | Sem internet</title>
+    <!-- Mostrada pelo sw.js quando uma página não abre por falta de rede.
+         Estática e sem dado de ninguém: nunca guardamos página PHP no cache. -->
+    <style>
+        :root { --fundo: #0f172a; --texto: #f1f5f9; --apagado: #cbd5e1; --botao: #3b82f6; }
+        @media (prefers-color-scheme: light) {
+            :root { --fundo: #f8fafc; --texto: #0f172a; --apagado: #475569; --botao: #2563eb; }
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 24px 16px; background: var(--fundo); color: var(--texto);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align: center;
+        }
+        main { max-width: 420px; }
+        img { width: 72px; height: 72px; border-radius: 16px; }
+        h1 { font-size: 1.5rem; margin: 20px 0 8px; }
+        p { color: var(--apagado); font-size: 1.05rem; line-height: 1.5; margin: 0 0 24px; }
+        button {
+            font: inherit; font-weight: 600; color: #fff; background: var(--botao); border: 0;
+            border-radius: 12px; padding: 14px 28px; min-height: 48px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <img src="assets/img/icon-192.png" alt="" width="72" height="72">
+        <h1>Você está sem internet</h1>
+        <p>Assim que a conexão voltar, toque em "Tentar de novo". Seu progresso nas aulas fica salvo.</p>
+        <button type="button" id="tentar">Tentar de novo</button>
+    </main>
+    <script>
+        document.getElementById('tentar').addEventListener('click', function () { location.reload(); });
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Páginas públicas podem ser indexadas; área logada, painel e endpoints não.
+# A homologação manda "X-Robots-Tag: noindex" em toda página PHP (ver
+# php/conexao.php), então não aparece no Google mesmo com este arquivo.
+User-agent: *
+Disallow: /php/
+Disallow: /ajax_
+Disallow: /webhook_asaas.php
+Disallow: /lembrete_diario.php
+Disallow: /login_2fa.php
+Disallow: /redefinir_senha.php
+Disallow: /saude.php
+Allow: /
